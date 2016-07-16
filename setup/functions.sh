@@ -125,7 +125,7 @@ createPartition()
     # TODO Try to find more elegant solution
     # sync and partprobe did not work to avoid following report:
     # "Re-reading the partition table failed: Device or resource busy"
-    sleep 5
+    sleep 10
 
     err "$?" "$FUNCNAME" "failed to create partition"
 }
