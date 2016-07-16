@@ -20,6 +20,30 @@ set -o nounset -o errexit
 source functions.sh
 
 #-------------------------------------------------------------------------------
+# Configuration variables
+#-------------------------------------------------------------------------------
+
+#---------------------------------------
+# Disks, partitions and file systems
+#---------------------------------------
+
+SYSTEM_HDD=sda
+
+MBR_PART_NB=1
+MBR_PART_SIZE=+2M
+
+BOOT_PART_NB=2
+BOOT_PART_SIZE=+128M
+BOOT_PART_FS=ext2
+
+SWAP_PART_NB=3
+SWAP_PART_SIZE=+1G
+
+ROOT_PART_NB=4
+ROOT_PART_SIZE=""
+ROOT_PART_FS=ext4
+
+#-------------------------------------------------------------------------------
 # Base system installation
 #-------------------------------------------------------------------------------
 
@@ -40,5 +64,116 @@ createLogDir()
         echo "Aborting script!"
         exit 1
     fi
+}
+
+#---------------------------------------
+# Disks, partitions and file systems
+#---------------------------------------
+
+checkInitialPartitionsCount()
+{
+    local hdd="/dev/$SYSTEM_HDD"
+
+    log "Check initial partitions count..."
+    checkPartitionsCount $hdd 0
+    err "$?" "$FUNCNAME" "Disk $hdd does not have expected partitions count"
+    log "Check initial partition counts...done"
+}
+
+createMbrPartition()
+{
+    log "Create MBR partition..."
+    createPartition /dev/$SYSTEM_HDD p $MBR_PART_NB "$MBR_PART_SIZE" 83
+    log "Create MBR partition...done"
+}
+
+createBootPartition()
+{
+    log "Create boot partition..."
+    createPartition /dev/$SYSTEM_HDD p $BOOT_PART_NB "$BOOT_PART_SIZE" 83
+    log "Create boot partition...done"
+}
+
+createSwapPartition()
+{
+    log "Create swap partition..."
+    createPartition /dev/$SYSTEM_HDD p $SWAP_PART_NB "$SWAP_PART_SIZE" 82
+    log "Create swap partition...done"
+}
+
+createRootPartition()
+{
+    log "Create root partition..."
+    createPartition /dev/$SYSTEM_HDD p $ROOT_PART_NB "$ROOT_PART_SIZE" 83
+    log "Create root partition...done"
+}
+
+checkCreatedPartitionsCount()
+{
+    local hdd="/dev/$SYSTEM_HDD"
+
+    log "Check created partitions..."
+    checkPartitionsCount $hdd 4
+    err "$?" "$FUNCNAME" "Disk $hdd does not contain required partitions"
+    log "Check created partitions...done"
+}
+
+setBootPartitionBootable()
+{
+    log "Set boot partition bootable..."
+    setPartitionBootable /dev/$SYSTEM_HDD $BOOT_PART_NB
+    log "Set boot partition bootable...done"
+}
+
+createBootFileSystem()
+{
+    log "Create boot file system..."
+    cmd "mkfs.$BOOT_PART_FS /dev/$SYSTEM_HDD$BOOT_PART_NB"
+    err "$?" "$FUNCNAME" "failed to create boot file system"
+    log "Create boot file system...done"
+}
+
+createSwap()
+{
+    log "Create swap..."
+    cmd "mkswap /dev/$SYSTEM_HDD$SWAP_PART_NB"
+    err "$?" "$FUNCNAME" "failed to create swap"
+    log "Create swap...done"
+}
+
+activateSwap()
+{
+    log "Activate swap..."
+    cmd "swapon /dev/$SYSTEM_HDD$SWAP_PART_NB"
+    err "$?" "$FUNCNAME" "failed to activate swap"
+    log "Activate swap...done"
+}
+
+createRootFileSystem()
+{
+    log "Create root file system..."
+    cmd "mkfs.$ROOT_PART_FS /dev/$SYSTEM_HDD$ROOT_PART_NB"
+    err "$?" "$FUNCNAME" "failed to create root file system"
+    log "Create root file system...done"
+}
+
+mountRootPartition()
+{
+    log "Mount root partition..."
+    cmd "mount /dev/$SYSTEM_HDD$ROOT_PART_NB /mnt/gentoo"
+    err "$?" "$FUNCNAME" "failed to mount root partition"
+    log "Mount root partition...done"
+}
+
+mountBootPartition()
+{
+    local mntPnt="/mnt/gentoo/boot"
+
+    log "Mount boot partition..."
+    cmd "mkdir $mntPnt"
+    err "$?" "$FUNCNAME" "failed to create boot partition mount point $mntPnt"
+    cmd "mount /dev/$SYSTEM_HDD$BOOT_PART_NB $mntPnt"
+    err "$?" "$FUNCNAME" "failed to mount root partition"
+    log "Mount boot partition...done"
 }
 

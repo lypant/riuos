@@ -30,8 +30,22 @@ main()
     createLogDir
     log "Install base system..."
 
-    # TODO Perform installation
-    log "TODO implement base system installation!"
+    #---------------------------------------
+    # Disks, partitions and file systems
+    #---------------------------------------
+    checkInitialPartitionsCount # Do not remove old partitions as safety measure
+    createMbrPartition          # Does not need file system; just reserve space
+    createBootPartition
+    createSwapPartition
+    createRootPartition
+    checkCreatedPartitionsCount # Ensure all partitions were created
+    setBootPartitionBootable
+    createBootFileSystem
+    createSwap
+    activateSwap
+    createRootFileSystem
+    mountRootPartition
+    mountBootPartition          # Has to be mounted under root partition FS
 
     #---------------------------------------
     # Post-install steps

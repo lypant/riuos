@@ -3,3 +3,13 @@ Gentoo Linux installation scripts
 Goals:
 - automated (as much as possible) installation of Gentoo Linux
 - possibility to apply newly added functionality on existing installation
+
+Installation:
+- boot your machine using Gentoo Linux livecd
+- download these installation scripts (current development branch name is '01')
+    curl -L https://github.com/lypant/riuos/tarball/<branch_name> | tar xz
+- change name of obtained folder to 'riuos'
+- go to riuos/setup and adjust any settings in scripts, if needed
+- start installation with execution of 01_install_base_system.sh script
+- TODO write next steps
+
