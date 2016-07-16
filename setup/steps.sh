@@ -177,3 +177,19 @@ mountBootPartition()
     log "Mount boot partition...done"
 }
 
+unmountBootPartition()
+{
+    log "Unmount boot partition..."
+    cmd "umount  /mnt/gentoo/boot"
+    err "$?" "$FUNCNAME" "failed to unmount boot partition"
+    log "Unmount boot partition...done"
+}
+
+unmountRootPartition()
+{
+    log "Unmount root partition..."
+    cmd "umount  /mnt/gentoo"
+    err "$?" "$FUNCNAME" "failed to unmount root partition"
+    log "Unmount root partition...done"
+}
+

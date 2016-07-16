@@ -50,6 +50,8 @@ main()
     #---------------------------------------
     # Post-install steps
     #---------------------------------------
+    unmountBootPartition
+    unmountRootPartition        # Has to be unmounted as last one
     log "Install base system...done"
 }
 
