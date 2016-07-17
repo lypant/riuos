@@ -160,7 +160,9 @@ downloadFile()
     local url=$1
     local dst=$2
 
+    log "Downloading file from $url to $dst..."
     cmd "curl -LSso $dst --create-dirs $url"
     err "$?" "$FUNCNAME" "failed to download file"
+    log "Downloading file from $url to $dst...done"
 }
 
