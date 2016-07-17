@@ -232,12 +232,12 @@ getStage3Tarball()
     downloadFile $remoteDigests $localDigests
 
     log "Verifying tarball integrity"
-    expectedHash=`grep $S3_TARBALL $localDigests | head -n 1 | awk \'{print $1;}\'`
-    calculatedHash=`sha512sum $localTarball`
+    expectedHash=`grep $S3_TARBALL $localDigests | head -n 1 | awk '{print $1;}'`
+    calculatedHash=`sha512sum $localTarball | awk '{print $1;}'`
     if [[ "$expectedHash" == "$calculatedHash" ]];then
         log "Tarball hash ok"
     else
-        err "1" "$FUNCNAME" "Calculated hash $calulatedHash is different than expected hash $expextedHash"
+        err "1" "$FUNCNAME" "Calculated hash $calculatedHash is different than expected hash $expectedHash"
     fi
 
     log "Get stage3 tarball...done"
