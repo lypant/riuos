@@ -43,6 +43,13 @@ ROOT_PART_NB=4
 ROOT_PART_SIZE=""
 ROOT_PART_FS=ext4
 
+#---------------------------------------
+# Stage3 tarball
+#---------------------------------------
+
+S3_URL=http://distfiles.gentoo.org/releases/x86/autobuilds/current-install-x86-minimal
+S3_TARBALL=""   # Empty - autodetect
+
 #-------------------------------------------------------------------------------
 # Base system installation
 #-------------------------------------------------------------------------------
@@ -193,3 +200,26 @@ unmountRootPartition()
     log "Unmount root partition...done"
 }
 
+getStage3Tarball()
+{
+    local regEx="stage3-i686-[0-9]*.tar.bz2"
+
+    log "Get stage3 tarball..."
+
+    # Check/get tarball file name
+    if [[ -z "$S3_TARBALL" ]]; then
+        # If name of tarball was not configured explicitly - obtain one from web
+        S3_TARBALL=$(curl -sL $S3_URL | grep -o $regEx | head -n 1)
+        log "Using current stage3 tarball found in web: $S3_TARBALL"
+    else
+        log "Using stage3 tarball specified in config variable: $S3_TARBALL"
+    fi
+
+    log "Downloading stage3 tarball file"
+    downloadFile "$S3_URL/$S3_TARBALL" "/mnt/gentoo/$S3_TARBALL"
+
+    log "Downloading stage3 tarball digest file"
+    downloadFile "$S3_URL/$S3_TARBALL.DIGEST" "/mnt/gentoo/$S3_TARBALL.DIGEST"
+
+    log "Get stage3 tarball...done"
+}

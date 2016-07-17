@@ -48,6 +48,11 @@ main()
     mountBootPartition          # Has to be mounted under root partition FS
 
     #---------------------------------------
+    # Stage 3 tarball
+    #---------------------------------------
+    getStage3Tarball
+
+    #---------------------------------------
     # Post-install steps
     #---------------------------------------
     unmountBootPartition

@@ -150,3 +150,17 @@ setPartitionBootable()
     err "$?" "$FUNCNAME" "failed to set partition $hdd/$partNb as bootable"
 }
 
+# @brief Downloads file from given url and saves it under given destination path
+# @param url of source file to be downloaded from web, e.g. "https://www.archlinux.org/mirrorlist/?country=PL"
+# @param destination path and file name, e.g. "/etc/pacman.d/mirrorlist"
+# @return none for success; script abort for failure
+# @note creates nested directories in destination path, if necessary
+downloadFile()
+{
+    local url=$1
+    local dst=$2
+
+    cmd "curl -LSso $dst --create-dirs $url"
+    err "$?" "$FUNCNAME" "failed to download file"
+}
+
