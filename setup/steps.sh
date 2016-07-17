@@ -202,7 +202,8 @@ unmountRootPartition()
 
 getStage3Tarball()
 {
-    local regEx="stage3-i686-[0-9]*.tar.bz2"
+    local regEx=stage3-i686-[0-9]*.tar.bz2
+    local dstDir=/mnt/gentoo
     local remoteTarball=""
     local localTarball=""
     local remoteDigests=""
@@ -223,12 +224,12 @@ getStage3Tarball()
 
     log "Downloading stage3 tarball file"
     remoteTarball=$S3_URL/$S3_TARBALL
-    localTarball=/mnt/gentoo/$S3_TARBALL
+    localTarball=$dstDir/$S3_TARBALL
     downloadFile $remoteTarball $localTarball
 
     log "Downloading stage3 tarball digest file"
     remoteDigests=$remoteTarball.DIGESTS
-    localDigests=/mnt/gentoo/$S3_TARBALL.DIGESTS
+    localDigests=$dstDir/$S3_TARBALL.DIGESTS
     downloadFile $remoteDigests $localDigests
 
     log "Verifying tarball integrity"
@@ -239,6 +240,15 @@ getStage3Tarball()
     else
         err "1" "$FUNCNAME" "Calculated hash $calculatedHash is different than expected hash $expectedHash"
     fi
+
+    log "Unpack stage3 tarball"
+    cmd "tar xvjpf $localTarball -C $dstDir --xattrs"
+
+    log "Remove tarball file"
+    cmd "rm $localTarball"
+
+    log "Remove digests file"
+    cmd "rm $localDigests"
 
     log "Get stage3 tarball...done"
 }
