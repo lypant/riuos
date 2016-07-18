@@ -50,6 +50,13 @@ ROOT_PART_FS=ext4
 S3_URL=http://distfiles.gentoo.org/releases/x86/autobuilds/current-install-x86-minimal
 S3_TARBALL=""   # Empty - autodetect
 
+#---------------------------------------
+# Compilation options
+#---------------------------------------
+
+CFLAGS="-march=pentium2 -mno-accumulate-outgoing-args -mno-fxsr -mno-sahf -O2"
+MAKEOPTS="-j2"
+
 #-------------------------------------------------------------------------------
 # Base system installation
 #-------------------------------------------------------------------------------
@@ -251,5 +258,17 @@ getStage3Tarball()
     cmd "rm $localDigests"
 
     log "Get stage3 tarball...done"
+}
+
+setCompilationOptions()
+{
+    local file=/mnt/gentoo/etc/portage/make.conf
+
+    log "Set compilation options..."
+    replaceVarValue CFLAGS $file "$CFLAGS"
+    err "$?" "$FUNCNAME" "failed to set CFLAGS in $file"
+    cmd "echo \"MAKEOPTS=\\\"$MAKEOPTS\\\"\" >> $file"
+    err "$?" "$FUNCNAME" "failed to add MAKEOPTS to $file"
+    log "Set compilation options...done"
 }
 

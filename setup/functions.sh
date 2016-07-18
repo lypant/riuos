@@ -166,3 +166,18 @@ downloadFile()
     log "Downloading file from $url to $dst...done"
 }
 
+# @brief Replaces old value of var with new one, for all instances in a file
+# @param variable name to be located in file
+# @param file storing variable to be modified
+# @param new value of the variable to be set
+# @return sed status
+# TODO return nonzero exit code when no replacement was done !!!
+replaceVarValue()
+{
+    local var="$1"
+    local file="$2"
+    local newValue="$3"
+
+    cmd "sed -i \"s|$var=.*|$var=\\\"$newValue\\\"|g\" $file"
+}
+

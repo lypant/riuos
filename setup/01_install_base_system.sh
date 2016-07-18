@@ -53,6 +53,11 @@ main()
     getStage3Tarball
 
     #---------------------------------------
+    # Compilation options
+    #---------------------------------------
+    setCompilationOptions
+
+    #---------------------------------------
     # Post-install steps
     #---------------------------------------
     unmountBootPartition
