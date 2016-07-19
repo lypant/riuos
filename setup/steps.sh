@@ -342,3 +342,16 @@ mountLiveFilesystems()
     log "Mount live filesystems...done"
 }
 
+chroot()
+{
+    log "Chroot..."
+
+    cmd "chroot /mnt/gentoo /bin/bash"
+    err "$?" "$FUNCNAME" "failed to chroot"
+
+    cmd "source /etc/profile"
+    err "$?" "$FUNCNAME" "failed to load /etc/profile"
+
+    log "Chroot...done"
+}
+

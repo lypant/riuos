@@ -68,6 +68,7 @@ main()
     # Chrooting
     #---------------------------------------
     mountLiveFilesystems
+    chroot
 
     #---------------------------------------
     # Post-install steps
