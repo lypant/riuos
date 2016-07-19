@@ -56,6 +56,8 @@ main()
     # Compilation options
     #---------------------------------------
     setCompilationOptions
+    selectMirrors           # Hardcoded servers; mirrorselect had pipe problems
+    setupGentooRepos
 
     #---------------------------------------
     # Post-install steps

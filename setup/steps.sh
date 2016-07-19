@@ -249,6 +249,7 @@ getStage3Tarball()
     fi
 
     log "Unpack stage3 tarball"
+    # TODO Consider removing verbosity flag from tar for less clugged output
     cmd "tar xvjpf $localTarball -C $dstDir --xattrs"
 
     log "Remove tarball file"
@@ -270,5 +271,34 @@ setCompilationOptions()
     cmd "echo \"MAKEOPTS=\\\"$MAKEOPTS\\\"\" >> $file"
     err "$?" "$FUNCNAME" "failed to add MAKEOPTS to $file"
     log "Set compilation options...done"
+}
+
+selectMirrors()
+{
+    local file=/mnt/gentoo/etc/portage/make.conf
+    local servers="rsync://gentoo.prz.rzeszow.pl/gentoo"
+    local servers="$servers http://gentoo.prz.rzeszow.pl"
+    local servers="$servers rsync://ftp.vectranet.pl/gentoo/"
+    local servers="$servers ftp://ftp.vectranet.pl/gentoo/"
+    local servers="$servers http://ftp.vectranet.pl/gentoo/"
+
+    log "Select mirrors..."
+    cmd "echo \"GENTOO_MIRRORS=\\\"$servers\\\"\" >> $file"
+    err "$?" "$FUNCNAME" "failed to select mirrors"
+    log "Select mirrors...done"
+}
+
+setupGentooRepos()
+{
+    local dir=/mnt/gentoo/etc/portage/repos.conf
+    local src=/mnt/gentoo/usr/share/portage/config/repos.conf
+    local dst=/mnt/gentoo/etc/portage/repos.conf/gentoo.conf
+
+    log "Setup Gentoo repos..."
+    cmd "mkdir -p $dir"
+    err "$?" "$FUNCNAME" "failed to create repos directory $dir"
+    cmd "cp $src $dst"
+    err "$?" "$FUNCNAME" "failed to copy $src to $dst"
+    log "Setup Gentoo repos...done"
 }
 
