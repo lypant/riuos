@@ -313,3 +313,32 @@ copyDnsInfo()
     log "Copy DNS info...done"
 }
 
+mountLiveFilesystems()
+{
+    local fs=""
+
+    log "Mount live filesystems..."
+
+    fs=/mnt/gentoo/proc
+    cmd "mount -t proc proc $fs"
+    err "$?" "$FUNCNAME" "failed to mount $fs"
+
+    fs=/mnt/gentoo/sys
+    cmd "mount --rbind /sys $fs"
+    err "$?" "$FUNCNAME" "failed to rbind $fs"
+
+    fs=/mnt/gentoo/sys
+    cmd "mount --make-rslave $fs"
+    err "$?" "$FUNCNAME" "failed to make rslave $fs"
+
+    fs=/mnt/gentoo/dev
+    cmd "mount --rbind /dev $fs"
+    err "$?" "$FUNCNAME" "failed to rbind $fs"
+
+    fs=/mnt/gentoo/dev
+    cmd "mount --make-rslave $fs"
+    err "$?" "$FUNCNAME" "failed to make rslave $fs"
+
+    log "Mount live filesystems...done"
+}
+

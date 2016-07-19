@@ -65,6 +65,11 @@ main()
     copyDnsInfo
 
     #---------------------------------------
+    # Chrooting
+    #---------------------------------------
+    mountLiveFilesystems
+
+    #---------------------------------------
     # Post-install steps
     #---------------------------------------
     unmountBootPartition
