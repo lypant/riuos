@@ -288,6 +288,14 @@ selectMirrors()
     log "Select mirrors...done"
 }
 
+selectMirrorsAutomatically()
+{
+    log "Select mirrors automatically..."
+    cmd "mirrorselect -c Poland -s 3 -o >> /mnt/gentoo/etc/portage/make.conf"
+    err "$?" "$FUNCNAME" "failed to execute mirrorselect"
+    log "Select mirrors automatically...done"
+}
+
 setupGentooRepos()
 {
     local dir=/mnt/gentoo/etc/portage/repos.conf
@@ -340,18 +348,5 @@ mountLiveFilesystems()
     err "$?" "$FUNCNAME" "failed to make rslave $fs"
 
     log "Mount live filesystems...done"
-}
-
-chroot()
-{
-    log "Chroot..."
-
-    cmd "chroot /mnt/gentoo /bin/bash"
-    err "$?" "$FUNCNAME" "failed to chroot"
-
-    cmd "source /etc/profile"
-    err "$?" "$FUNCNAME" "failed to load /etc/profile"
-
-    log "Chroot...done"
 }
 

@@ -60,7 +60,8 @@ main()
     #---------------------------------------
     # Mirrors, repos, DNS info
     #---------------------------------------
-    selectMirrors           # Hardcoded servers; mirrorselect had pipe problems
+    selectMirrors               # Hardcoded servers
+    #selectMirrorsAutomatically  # Obtain servers - for some reason only 1
     setupGentooRepos
     copyDnsInfo
 
@@ -68,7 +69,6 @@ main()
     # Chrooting
     #---------------------------------------
     mountLiveFilesystems
-    chroot
 
     #---------------------------------------
     # Post-install steps
