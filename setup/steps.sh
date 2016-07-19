@@ -298,7 +298,18 @@ setupGentooRepos()
     cmd "mkdir -p $dir"
     err "$?" "$FUNCNAME" "failed to create repos directory $dir"
     cmd "cp $src $dst"
-    err "$?" "$FUNCNAME" "failed to copy $src to $dst"
+    err "$?" "$FUNCNAME" "failed to copy Gentoo repos from $src to $dst"
     log "Setup Gentoo repos...done"
+}
+
+copyDnsInfo()
+{
+    local src=/etc/resolv.conf
+    local dst=/mnt/gentoo/etc/
+
+    log "Copy DNS info..."
+    cmd "cp -L $src $dst"
+    err "$?" "$FUNCNAME" "failed to copy DNS info from $src to $dst"
+    log "Copy DNS info...done"
 }
 
