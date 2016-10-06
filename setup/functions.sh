@@ -148,13 +148,12 @@ downloadFile()
 # @param file storing variable to be modified
 # @param new value of the variable to be set
 # @return sed status
-# TODO return nonzero exit code when no replacement was done !!!
 replaceVarValue()
 {
     local var="$1"
     local file="$2"
     local newValue="$3"
 
-    cmd "sed -i \"s|$var=.*|$var=\\\"$newValue\\\"|g\" $file"
+    cmd "sed -i \"/$var/{s/$var=.*/$var=$newValue/;h};\\\${x;q0};x;q1}\" $file"
 }
 
