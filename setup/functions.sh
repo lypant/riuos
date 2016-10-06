@@ -47,24 +47,6 @@ cmd()
     return ${PIPESTATUS[0]}
 }
 
-# @brief Prints summary and aborts the script in case of non-zero error code
-# @param error code to be compared against 0
-# @param function name to be reported in case of failure
-# @param message to be reported in case of failure
-# @return none in case of success; script abort in case of failure
-# @example err "$?" "$FUNCNAME" "message to be shown and logged"
-err()
-{
-    local error="$1"
-    local funcname="$2"
-    local msg="$3"
-
-    if [[ "$error" -ne 0 ]]; then
-        log "$funcname: $msg: $error"
-        log "Aborting!"
-        exit 1
-    fi
-}
 # @brief Checks whether partitions count for given hdd is as expected
 # @param path to hdd, without partition number
 # @param expected partitions count
@@ -126,8 +108,6 @@ createPartition()
     # sync and partprobe did not work to avoid following report:
     # "Re-reading the partition table failed: Device or resource busy"
     sleep 10
-
-    err "$?" "$FUNCNAME" "failed to create partition"
 }
 
 # @brief Sets bootable flag of the partition to true
@@ -146,8 +126,6 @@ setPartitionBootable()
 	$partNb
 	w
 	EOF
-
-    err "$?" "$FUNCNAME" "failed to set partition $hdd/$partNb as bootable"
 }
 
 # @brief Downloads file from given url and saves it under given destination path
@@ -162,7 +140,6 @@ downloadFile()
 
     log "Downloading file from $url to $dst..."
     cmd "curl -LSo $dst --create-dirs $url"
-    err "$?" "$FUNCNAME" "failed to download file"
     log "Downloading file from $url to $dst...done"
 }
 

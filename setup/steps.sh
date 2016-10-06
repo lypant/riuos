@@ -70,7 +70,7 @@ createLogDir()
     local logDir="../logs"
 
     # Use plain commands and simple echo since log dir
-    # needed for "log", "cmd" and "err" does not exist yet
+    # needed for "log", "cmd" does not exist yet
 
     mkdir -p $logDir
     if [[ "$?" -ne 0 ]]; then
@@ -90,7 +90,6 @@ checkInitialPartitionsCount()
 
     log "Check initial partitions count..."
     checkPartitionsCount $hdd 0
-    err "$?" "$FUNCNAME" "Disk $hdd does not have expected partitions count"
     log "Check initial partition counts...done"
 }
 
@@ -128,7 +127,6 @@ checkCreatedPartitionsCount()
 
     log "Check created partitions..."
     checkPartitionsCount $hdd 4
-    err "$?" "$FUNCNAME" "Disk $hdd does not contain required partitions"
     log "Check created partitions...done"
 }
 
@@ -143,7 +141,6 @@ createBootFileSystem()
 {
     log "Create boot file system..."
     cmd "mkfs.$BOOT_PART_FS /dev/$SYSTEM_HDD$BOOT_PART_NB"
-    err "$?" "$FUNCNAME" "failed to create boot file system"
     log "Create boot file system...done"
 }
 
@@ -151,7 +148,6 @@ createSwap()
 {
     log "Create swap..."
     cmd "mkswap /dev/$SYSTEM_HDD$SWAP_PART_NB"
-    err "$?" "$FUNCNAME" "failed to create swap"
     log "Create swap...done"
 }
 
@@ -159,7 +155,6 @@ activateSwap()
 {
     log "Activate swap..."
     cmd "swapon /dev/$SYSTEM_HDD$SWAP_PART_NB"
-    err "$?" "$FUNCNAME" "failed to activate swap"
     log "Activate swap...done"
 }
 
@@ -167,7 +162,6 @@ createRootFileSystem()
 {
     log "Create root file system..."
     cmd "mkfs.$ROOT_PART_FS /dev/$SYSTEM_HDD$ROOT_PART_NB"
-    err "$?" "$FUNCNAME" "failed to create root file system"
     log "Create root file system...done"
 }
 
@@ -175,7 +169,6 @@ mountRootPartition()
 {
     log "Mount root partition..."
     cmd "mount /dev/$SYSTEM_HDD$ROOT_PART_NB /mnt/gentoo"
-    err "$?" "$FUNCNAME" "failed to mount root partition"
     log "Mount root partition...done"
 }
 
@@ -185,9 +178,7 @@ mountBootPartition()
 
     log "Mount boot partition..."
     cmd "mkdir $mntPnt"
-    err "$?" "$FUNCNAME" "failed to create boot partition mount point $mntPnt"
     cmd "mount /dev/$SYSTEM_HDD$BOOT_PART_NB $mntPnt"
-    err "$?" "$FUNCNAME" "failed to mount root partition"
     log "Mount boot partition...done"
 }
 
@@ -195,7 +186,6 @@ unmountBootPartition()
 {
     log "Unmount boot partition..."
     cmd "umount  /mnt/gentoo/boot"
-    err "$?" "$FUNCNAME" "failed to unmount boot partition"
     log "Unmount boot partition...done"
 }
 
@@ -203,7 +193,6 @@ unmountRootPartition()
 {
     log "Unmount root partition..."
     cmd "umount  /mnt/gentoo"
-    err "$?" "$FUNCNAME" "failed to unmount root partition"
     log "Unmount root partition...done"
 }
 
@@ -245,7 +234,8 @@ getStage3Tarball()
     if [[ "$expectedHash" == "$calculatedHash" ]];then
         log "Tarball hash ok"
     else
-        err "1" "$FUNCNAME" "Calculated hash $calculatedHash is different than expected hash $expectedHash"
+        log "Calculated hash $calculatedHash is different than expected hash $expectedHash; aborting"
+        exit 1
     fi
 
     log "Unpack stage3 tarball"
@@ -267,9 +257,7 @@ setCompilationOptions()
 
     log "Set compilation options..."
     replaceVarValue CFLAGS $file "$CFLAGS"
-    err "$?" "$FUNCNAME" "failed to set CFLAGS in $file"
     cmd "echo \"MAKEOPTS=\\\"$MAKEOPTS\\\"\" >> $file"
-    err "$?" "$FUNCNAME" "failed to add MAKEOPTS to $file"
     log "Set compilation options...done"
 }
 
@@ -284,7 +272,6 @@ selectMirrors()
 
     log "Select mirrors..."
     cmd "echo \"GENTOO_MIRRORS=\\\"$servers\\\"\" >> $file"
-    err "$?" "$FUNCNAME" "failed to select mirrors"
     log "Select mirrors...done"
 }
 
@@ -292,7 +279,6 @@ selectMirrorsAutomatically()
 {
     log "Select mirrors automatically..."
     cmd "mirrorselect -c Poland -s 3 -o >> /mnt/gentoo/etc/portage/make.conf"
-    err "$?" "$FUNCNAME" "failed to execute mirrorselect"
     log "Select mirrors automatically...done"
 }
 
@@ -304,9 +290,7 @@ setupGentooRepos()
 
     log "Setup Gentoo repos..."
     cmd "mkdir -p $dir"
-    err "$?" "$FUNCNAME" "failed to create repos directory $dir"
     cmd "cp $src $dst"
-    err "$?" "$FUNCNAME" "failed to copy Gentoo repos from $src to $dst"
     log "Setup Gentoo repos...done"
 }
 
@@ -317,7 +301,6 @@ copyDnsInfo()
 
     log "Copy DNS info..."
     cmd "cp -L $src $dst"
-    err "$?" "$FUNCNAME" "failed to copy DNS info from $src to $dst"
     log "Copy DNS info...done"
 }
 
@@ -329,23 +312,18 @@ mountLiveFilesystems()
 
     fs=/mnt/gentoo/proc
     cmd "mount -t proc proc $fs"
-    err "$?" "$FUNCNAME" "failed to mount $fs"
 
     fs=/mnt/gentoo/sys
     cmd "mount --rbind /sys $fs"
-    err "$?" "$FUNCNAME" "failed to rbind $fs"
 
     fs=/mnt/gentoo/sys
     cmd "mount --make-rslave $fs"
-    err "$?" "$FUNCNAME" "failed to make rslave $fs"
 
     fs=/mnt/gentoo/dev
     cmd "mount --rbind /dev $fs"
-    err "$?" "$FUNCNAME" "failed to rbind $fs"
 
     fs=/mnt/gentoo/dev
     cmd "mount --make-rslave $fs"
-    err "$?" "$FUNCNAME" "failed to make rslave $fs"
 
     log "Mount live filesystems...done"
 }
