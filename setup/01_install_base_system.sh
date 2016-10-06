@@ -69,6 +69,7 @@ main()
     # Chrooting
     #---------------------------------------
     mountLiveFilesystems
+    installPortageSnapshot
 
     #---------------------------------------
     # Post-install steps

@@ -75,7 +75,6 @@ checkPartitionsCount()
 # @param partition number, e.g. "1" for "/dev/sda1"
 # @param partition size, e.g. "+1G" for 1 GiB, "" for remaining space
 # @param partition code, e.g. "82" for swap, "83" for Linux partition, etc
-# @return none for success; script abort for failure
 # @example createPartition /dev/sda p 2 "+128M" 83
 createPartition()
 {
@@ -113,7 +112,6 @@ createPartition()
 # @brief Sets bootable flag of the partition to true
 # @param path to hdd, without partition number, e.g. /dev/sda
 # @param partition number, .e.g. "1" for "/dev/sda1"
-# @return none for success; script abort for failure
 # @example setPartitionBootable /dev/sda 2
 # @note Best executed when all (at least two) partitions are created
 setPartitionBootable()
@@ -129,9 +127,9 @@ setPartitionBootable()
 }
 
 # @brief Downloads file from given url and saves it under given destination path
-# @param url of source file to be downloaded from web, e.g. "https://www.archlinux.org/mirrorlist/?country=PL"
-# @param destination path and file name, e.g. "/etc/pacman.d/mirrorlist"
-# @return none for success; script abort for failure
+# @param url of source file to be downloaded from web
+# @param destination path and file name
+# @example downloadFile https://www.archlinux.org/mirrorlist/?country=PL /etc/pacman.d/mirrorlist
 # @note creates nested directories in destination path, if necessary
 downloadFile()
 {
@@ -147,7 +145,7 @@ downloadFile()
 # @param variable name to be located in file
 # @param file storing variable to be modified
 # @param new value of the variable to be set
-# @return sed status
+# @example replaceVarValue CFLAGS /mnt/gentoo/etc/portage/make.conf "-O2"
 replaceVarValue()
 {
     local var="$1"
@@ -169,3 +167,10 @@ replaceVarValue()
     set -o errexit
 }
 
+# @brief Executes given command(s) after chroot to /mnt/gentoo
+# @param command(s) command to be executed
+# @example gentooChroot "emerge-webrsync"
+gentooChroot()
+{
+    cmd chroot /mnt/gentoo /bin/bash -c \""$@"\"
+}

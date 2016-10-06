@@ -330,3 +330,10 @@ mountLiveFilesystems()
     log "Mount live filesystems...done"
 }
 
+installPortageSnapshot()
+{
+    log "Install Portage snapshot..."
+    gentooChroot "emerge-webrsync"
+    log "Install Portage snapshot...done"
+}
+
