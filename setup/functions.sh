@@ -153,7 +153,19 @@ replaceVarValue()
     local var="$1"
     local file="$2"
     local newValue="$3"
+    local err=0
+
+    # Temporarily disable exiting script on error to show msg on failure...
+    set +o errexit
 
     cmd "sed -i \"/$var/{s/$var=.*/$var=$newValue/;h};\\\${x;/./{x;q0};x;q1}\" $file"
+    err="$?"
+    if [[ "$err" -ne 0 ]]; then
+        log "Failed to replace variable $var; err: $err; aborting script"
+        exit $err
+    fi
+
+    # Re-enable exiting script on error
+    set -o errexit
 }
 
