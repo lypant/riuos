@@ -154,6 +154,6 @@ replaceVarValue()
     local file="$2"
     local newValue="$3"
 
-    cmd "sed -i \"/$var/{s/$var=.*/$var=$newValue/;h};\\\${x;q0};x;q1}\" $file"
+    cmd "sed -i \"/$var/{s/$var=.*/$var=$newValue/;h};\\\${x;/./{x;q0};x;q1}\" $file"
 }
 

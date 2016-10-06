@@ -256,7 +256,9 @@ setCompilationOptions()
     local file=/mnt/gentoo/etc/portage/make.conf
 
     log "Set compilation options..."
+    log "Replace CFLAGS"
     replaceVarValue CFLAGS $file "$CFLAGS"
+    log "Set MAKEOPTS"
     cmd "echo \"MAKEOPTS=\\\"$MAKEOPTS\\\"\" >> $file"
     log "Set compilation options...done"
 }
