@@ -57,6 +57,13 @@ S3_TARBALL=""   # Empty - autodetect
 CFLAGS="-march=pentium2 -mno-accumulate-outgoing-args -mno-fxsr -mno-sahf -O2"
 MAKEOPTS="-j2"
 
+#---------------------------------------
+# Profile
+#---------------------------------------
+
+#PROFILE="desktop"
+PROFILE="13.0"
+
 #-------------------------------------------------------------------------------
 # Base system installation
 #-------------------------------------------------------------------------------
@@ -335,5 +342,31 @@ installPortageSnapshot()
     log "Install Portage snapshot..."
     gentooChroot "emerge-webrsync"
     log "Install Portage snapshot...done"
+}
+
+selectProfile()
+{
+    local chrootedFile="/tmp/profile"
+    local file="/mnt/gentoo$chrootedFile"
+    local profileNb=0
+
+    log "Select profile..."
+
+    log "Find profile nb"
+    findProfile $PROFILE $chrootedFile
+
+    if [[ -s "$file" ]]; then
+        profileNb=$(<$file)
+        log "Setting profile $profileNb - $PROFILE"
+        gentooChroot "eselect profile set $profileNb"
+    else
+        log "Profile $PROFILE not found; available profiles:"
+        gentooChroot "eselect profile list"
+        exit 1
+    fi
+
+    gentooChroot "eselect profile list"
+
+    log "Select profile...done"
 }
 

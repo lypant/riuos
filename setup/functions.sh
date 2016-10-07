@@ -200,3 +200,18 @@ gentooChroot()
 {
     cmd chroot /mnt/gentoo /bin/bash -c \""$@"\"
 }
+
+# @brief Finds number of given profile name and stores the number into given file
+# @param profile profile for which the number needs to be found
+# @param file file into which the number will be stored
+# @example findProfile desktop /tmp/profile
+# @example findProfile 13.0 /tmp/profile
+# @note Storing to file is caused by a need of eselct to be executed from chrooted context
+findProfile()
+{
+    local profile="$1"
+    local file="$2"
+
+    gentooChroot "eselect profile list | sed 's/\ \*//' | grep $profile\$ | grep -o '[0-9]*' | head -n 1 > $file"
+}
+

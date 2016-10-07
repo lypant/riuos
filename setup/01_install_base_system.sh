@@ -70,6 +70,7 @@ main()
     #---------------------------------------
     mountLiveFilesystems
     installPortageSnapshot
+    selectProfile
 
     #---------------------------------------
     # Post-install steps
