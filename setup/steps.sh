@@ -379,10 +379,16 @@ selectProfile()
 setUseFlags()
 {
     local file="/mnt/gentoo/etc/portage/make.conf"
+
     log "Set use flags..."
-
     replaceVarValueQuoted USE $file "$USE_FLAGS"
-
     log "Set use flags...done"
+}
+
+updateWorldSet()
+{
+    log "Update world set..."
+    gentooChroot "emerge --update --deep --newuse @world"
+    log "Update world set...done"
 }
 

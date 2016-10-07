@@ -72,6 +72,7 @@ main()
     installPortageSnapshot
     selectProfile
     setUseFlags
+    updateWorldSet
 
     #---------------------------------------
     # Post-install steps
