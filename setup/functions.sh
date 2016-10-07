@@ -167,6 +167,32 @@ replaceVarValue()
     set -o errexit
 }
 
+# @brief Replaces old value of var with new one surrounded by double quotes, for all instances in a file
+# @param variable name to be located in file
+# @param file storing variable to be modified
+# @param new value of the variable to be set
+# @example replaceVarValue CFLAGS /mnt/gentoo/etc/portage/make.conf "-O2"
+replaceVarValueQuoted()
+{
+    local var="$1"
+    local file="$2"
+    local newValue="$3"
+    local err=0
+
+    # Temporarily disable exiting script on error to show msg on failure...
+    set +o errexit
+
+    cmd "sed -i \"/$var/{s/$var=.*/$var=\\\"$newValue\\\"/;h};\\\${x;/./{x;q0};x;q1}\" $file"
+    err="$?"
+    if [[ "$err" -ne 0 ]]; then
+        log "Failed to replace variable $var; err: $err; aborting script"
+        exit $err
+    fi
+
+    # Re-enable exiting script on error
+    set -o errexit
+}
+
 # @brief Executes given command(s) after chroot to /mnt/gentoo
 # @param command(s) command to be executed
 # @example gentooChroot "emerge-webrsync"

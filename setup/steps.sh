@@ -257,7 +257,7 @@ setCompilationOptions()
 
     log "Set compilation options..."
     log "Replace CFLAGS"
-    replaceVarValue CFLAGS $file "$CFLAGS"
+    replaceVarValueQuoted CFLAGS $file "$CFLAGS"
     log "Set MAKEOPTS"
     cmd "echo \"MAKEOPTS=\\\"$MAKEOPTS\\\"\" >> $file"
     log "Set compilation options...done"
