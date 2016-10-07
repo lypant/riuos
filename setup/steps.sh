@@ -64,6 +64,12 @@ MAKEOPTS="-j2"
 #PROFILE="desktop"
 PROFILE="13.0"
 
+#---------------------------------------
+# Use flags
+#---------------------------------------
+
+USE_FLAGS=""    # No special needs at the moment
+
 #-------------------------------------------------------------------------------
 # Base system installation
 #-------------------------------------------------------------------------------
@@ -368,5 +374,15 @@ selectProfile()
     gentooChroot "eselect profile list"
 
     log "Select profile...done"
+}
+
+setUseFlags()
+{
+    local file="/mnt/gentoo/etc/portage/make.conf"
+    log "Set use flags..."
+
+    replaceVarValueQuoted USE $file "$USE_FLAGS"
+
+    log "Set use flags...done"
 }
 

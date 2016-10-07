@@ -71,6 +71,7 @@ main()
     mountLiveFilesystems
     installPortageSnapshot
     selectProfile
+    setUseFlags
 
     #---------------------------------------
     # Post-install steps
