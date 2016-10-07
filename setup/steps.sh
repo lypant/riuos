@@ -405,3 +405,45 @@ setTimeZone()
     log "Set time zone...done"
 }
 
+setLocales()
+{
+    local localesFile="/mnt/gentoo/etc/locale.gen"
+    local chrootedFile="/tmp/locale"
+    local file="/mnt/gentoo$chrootedFile"
+    local localeNb=0
+
+    log "Set locales..."
+
+    log "Uncomment en_US locale"
+    uncommentVar en_US $localesFile
+
+    log "Uncomment en_US.UTF-8 locale"
+    uncommentVar en_US.UTF-8 $localesFile
+
+    log "Append pl_PL locale"
+    cmd "echo 'pl_PL.UTF-8 UTF-8' >> $localesFile"
+
+    log "Generate locales"
+    gentooChroot "locale-gen"
+
+    log "Find locale nb"
+    findLocale $LOCALE $chrootedFile
+
+    if [[ -s "$file" ]]; then
+        localeNb=$(<$file)
+        log "Setting locale $localeNb - $PROFILE"
+        gentooChroot "eselect locale set $localeNb"
+    else
+        log "Locale $LOCALE not found; available locales:"
+        gentooChroot "eselect locale list"
+        exit 1
+    fi
+
+    gentooChroot "eselect locale list"
+
+    log "Update environment"
+    gentooChroot "env-update"
+
+    log "Set locales...done"
+}
+

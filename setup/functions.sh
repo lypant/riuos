@@ -215,3 +215,29 @@ findProfile()
     gentooChroot "eselect profile list | sed 's/\ \*//' | grep $profile\$ | grep -o '[0-9]*' | head -n 1 > $file"
 }
 
+# @brief Uncomments given variable in given file
+# @param var variable to be uncommented
+# @param file file in which variable will be searched
+# @example uncommentVar en_US /mnt/gentoo/etc/locale.gen
+# TODO return non-zero exit code when variable was not found
+uncommentVar()
+{
+    local var="$1"
+    local file="$2"
+
+    cmd "sed -i \"s|^#\(${var}.*\)$|\1|\" ${file}"
+}
+
+# @brief Finds number of given locale name and stores the number into given file
+# @param locale locale for which the number needs to be found
+# @param file file into which the number will be stored
+# @example findProfile en_US.utf8 /tmp/locale
+# @note Storing to file is caused by a need of eselct to be executed from chrooted context
+findLocale()
+{
+    local locale="$1"
+    local file="$2"
+
+    gentooChroot "eselect locale list | sed 's/\ \*//' | grep $locale\$ | grep -o '[0-9]*' | head -n 1 > $file"
+}
+

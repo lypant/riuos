@@ -74,6 +74,7 @@ main()
     setUseFlags
     updateWorldSet
     setTimeZone
+    setLocales
 
     #---------------------------------------
     # Post-install steps
