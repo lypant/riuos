@@ -70,6 +70,12 @@ PROFILE="13.0"
 
 USE_FLAGS=""    # No special needs at the moment
 
+#---------------------------------------
+# Locales
+#---------------------------------------
+
+LOCALE="en_US.utf8"
+
 #-------------------------------------------------------------------------------
 # Base system installation
 #-------------------------------------------------------------------------------
@@ -431,7 +437,7 @@ setLocales()
 
     if [[ -s "$file" ]]; then
         localeNb=$(<$file)
-        log "Setting locale $localeNb - $PROFILE"
+        log "Setting locale $localeNb - $LOCALE"
         gentooChroot "eselect locale set $localeNb"
     else
         log "Locale $LOCALE not found; available locales:"
