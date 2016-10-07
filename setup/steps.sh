@@ -392,3 +392,16 @@ updateWorldSet()
     log "Update world set...done"
 }
 
+setTimeZone()
+{
+    log "Set time zone..."
+
+    log "Set zone"
+    gentooChroot "echo 'Europe/Warsaw' > /etc/timezone"
+
+    log "Reconfigure sys-libs/timezone-data package"
+    gentooChroot "emerge --config sys-libs/timezone-data"
+
+    log "Set time zone...done"
+}
+

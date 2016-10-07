@@ -73,6 +73,7 @@ main()
     selectProfile
     setUseFlags
     updateWorldSet
+    setTimeZone
 
     #---------------------------------------
     # Post-install steps
