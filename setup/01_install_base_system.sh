@@ -76,6 +76,11 @@ main()
     setTimeZone
     setLocales
 
+    #-------------------
+    # Kernel
+    #-------------------
+    installKernelSources
+
     #---------------------------------------
     # Post-install steps
     #---------------------------------------

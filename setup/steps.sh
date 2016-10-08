@@ -453,3 +453,10 @@ setLocales()
     log "Set locales...done"
 }
 
+installKernelSources()
+{
+    log "Install kernel sources..."
+    gentooChroot "emerge sys-kernel/gentoo-sources"
+    log "Install kernel sources...done"
+}
+
