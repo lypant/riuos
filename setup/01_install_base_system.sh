@@ -80,6 +80,7 @@ main()
     # Kernel
     #-------------------
     installKernelSources
+    generateDefaultKernelConfig
 
     #---------------------------------------
     # Post-install steps

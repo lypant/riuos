@@ -76,6 +76,12 @@ USE_FLAGS=""    # No special needs at the moment
 
 LOCALE="en_US.utf8"
 
+#---------------------------------------
+# Kernel
+#---------------------------------------
+
+ARCH="i386"
+
 #-------------------------------------------------------------------------------
 # Base system installation
 #-------------------------------------------------------------------------------
@@ -458,5 +464,12 @@ installKernelSources()
     log "Install kernel sources..."
     gentooChroot "emerge sys-kernel/gentoo-sources"
     log "Install kernel sources...done"
+}
+
+generateDefaultKernelConfig()
+{
+    log "Generate default kernel config..."
+    gentooChroot "make -C /usr/src/linux ${ARCH}_defconfig"
+    log "Generate default kernel config...done"
 }
 
