@@ -516,3 +516,17 @@ installFirmware()
     log "Install firmware...done"
 }
 
+configureFstab()
+{
+    log "Configure fstab..."
+    # Backup default fstab just for safety
+    cmd "mv /mnt/gentoo/etc/fstab /mnt/gentoo/etc/fstab.default"
+    # Do not add entry for MBR on /dev/sda1
+    addFstabEntry /dev/sda2  /boot       ext2 noauto,noatime 0 2
+    addFstabEntry /dev/sda3  none        swap sw             0 0
+    addFstabEntry /dev/sda4  /           ext4 noatime        0 1
+    addFstabEntry /dev/cdrom /mnt/cdrom  auto noauto,ro      0 0
+    addFstabEntry /dev/fd0   /mnt/floppy auto noauto         0 0
+    log "Configure fstab...done"
+}
+

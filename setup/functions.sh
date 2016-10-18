@@ -241,3 +241,22 @@ findLocale()
     gentooChroot "eselect locale list | sed 's/\ \*//' | grep $locale\$ | grep -o '[0-9]*' | head -n 1 > $file"
 }
 
+# @brief Appends fstab entry based on passed parameters
+# @param partition partition to be mounted
+# @param mntPath path under which partition should be mounted
+# @param mntOpts mount options
+# @param dumpOpts dump options; usually 0
+# @param fsckOpts fsck options; root fs: 0 or 1; non-root 1 or more
+# @example addFstabEntry "/dev/sda2" "/boot" "ext2" "noauto,noatime" "0" "2"
+addFstabEntry()
+{
+    local partition="$1"
+    local mntPath="$2"
+    local fsType="$3"
+    local mntOpts="$4"
+    local dumpOpts="$5"
+    local fsckOpts="$6"
+    local entry="$partition $mntPath $fsType $mntOpts $dumpOpts $fsckOpts"
+
+    cmd "echo $entry >> /mnt/gentoo/etc/fstab"
+}
