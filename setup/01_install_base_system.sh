@@ -81,6 +81,13 @@ main()
     #-------------------
     installKernelSources
     generateDefaultKernelConfig
+    # TODO Skipping scripted kernel options config for now - do it manually
+    echo "KERNEL OPTIONS SETTING NOT IMPLEMENTED FOR NOW..."
+    echo "...CONFIGURE OPTIONS MANUALLY AND THEN CONTINUE WITH SCRIPTS"
+ exit
+    compileKernel
+    installKernelModules
+    installKernel
 
     #---------------------------------------
     # Post-install steps

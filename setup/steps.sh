@@ -473,3 +473,24 @@ generateDefaultKernelConfig()
     log "Generate default kernel config...done"
 }
 
+compileKernel()
+{
+    log "Compile kernel..."
+    gentooChroot "make -C /usr/src/linux"
+    log "Compile kernel...done"
+}
+
+installKernelModules()
+{
+    log "Install kernel modules..."
+    gentooChroot "make -C /usr/src/linux modules_install"
+    log "Install kernel modules...done"
+}
+
+installKernel()
+{
+    log "Install kernel..."
+    gentooChroot "make -C /usr/src/linux install"
+    log "Install kernel...done"
+}
+
