@@ -88,6 +88,8 @@ main()
     compileKernel
     installKernelModules
     installKernel
+    installGenkernel
+    buildInitramfs
 
     #---------------------------------------
     # Post-install steps

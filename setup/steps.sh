@@ -494,3 +494,18 @@ installKernel()
     log "Install kernel...done"
 }
 
+# Needed for initramfs generation
+installGenkernel()
+{
+    log "Install genkernel..."
+    gentooChroot "emerge sys-kernel/genkernel"
+    log "Install genkernel...done"
+}
+
+buildInitramfs()
+{
+    log "Build initramfs..."
+    gentooChroot "genkernel --install initramfs"
+    log "Build initramfs...done"
+}
+
