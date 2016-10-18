@@ -90,6 +90,8 @@ main()
     installKernel
     installGenkernel
     buildInitramfs
+    # TODO Add here kernel modules automatic loading on startup if needed
+    installFirmware
 
     #---------------------------------------
     # Post-install steps

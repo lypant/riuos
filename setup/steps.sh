@@ -509,3 +509,10 @@ buildInitramfs()
     log "Build initramfs...done"
 }
 
+installFirmware()
+{
+    log "Install firmware..."
+    gentooChroot "emerge sys-kernel/linux-firmware"
+    log "Install firmware...done"
+}
+
