@@ -530,3 +530,10 @@ configureFstab()
     log "Configure fstab...done"
 }
 
+setHostname()
+{
+    log "Set hostname..."
+    replaceVarValueQuoted "hostname" "/mnt/gentoo/etc/conf.d/hostname" "robco"
+    log "Set hostname...done"
+}
+

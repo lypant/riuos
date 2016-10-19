@@ -98,6 +98,11 @@ main()
     #-------------------
     configureFstab
 
+    #-------------------
+    # TODO Name this section appropriately
+    #-------------------
+    setHostname
+
     #---------------------------------------
     # Post-install steps
     #---------------------------------------
