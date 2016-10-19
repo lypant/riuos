@@ -571,3 +571,20 @@ setNetworkStarting()
     log "Set network starting...done"
 }
 
+setRootPassword()
+{
+    local ask=1
+
+    log "Set root password..."
+
+    # Disable exit on error - to get a chance of correcting misspelled password
+    set +o errexit
+    while [ $ask -ne 0 ]; do
+        gentooChroot "passwd"
+        ask=$?
+    done
+    # Enable exiting on error again
+    set -o errexit
+
+    log "Set root password...done"
+}

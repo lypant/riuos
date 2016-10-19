@@ -106,6 +106,11 @@ main()
     setDhcp
     setNetworkStarting
 
+    #-------------------
+    # Root password
+    #-------------------
+    setRootPassword
+
     #---------------------------------------
     # Post-install steps
     #---------------------------------------
