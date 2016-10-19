@@ -82,6 +82,12 @@ LOCALE="en_US.utf8"
 
 ARCH="i386"
 
+#---------------------------------------
+# Ethernet interface
+#---------------------------------------
+
+ETHERNET="enp0s12"
+
 #-------------------------------------------------------------------------------
 # Base system installation
 #-------------------------------------------------------------------------------
@@ -535,5 +541,33 @@ setHostname()
     log "Set hostname..."
     replaceVarValueQuoted "hostname" "/mnt/gentoo/etc/conf.d/hostname" "robco"
     log "Set hostname...done"
+}
+
+# Needed for networking
+installNetifrc()
+{
+    log "Install netifrc..."
+    gentooChroot "emerge --noreplace net-misc/netifrc"
+    log "Install netifrc...done"
+}
+
+setDhcp()
+{
+    log "Set dhcp..."
+    cmd "echo config_${ETHERNET}=\"dhcp\" >> /mnt/gentoo/etc/conf.d/net"
+    log "Set dhcp...done"
+}
+
+setNetworkStarting()
+{
+    local common="/etc/init.d"
+    local target="$common/net.lo"
+    local linkFile="net.$ETHERNET"
+    local link="$common/$linkFile"
+
+    log "Set network starting..."
+    gentooChroot "ln -s $target $link"
+    gentooChroot "rc-update add $linkFile default"
+    log "Set network starting...done"
 }
 

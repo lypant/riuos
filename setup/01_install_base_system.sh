@@ -99,9 +99,12 @@ main()
     configureFstab
 
     #-------------------
-    # TODO Name this section appropriately
+    # Networking
     #-------------------
     setHostname
+    installNetifrc
+    setDhcp
+    setNetworkStarting
 
     #---------------------------------------
     # Post-install steps
