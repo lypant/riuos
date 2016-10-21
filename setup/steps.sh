@@ -588,3 +588,11 @@ setRootPassword()
 
     log "Set root password...done"
 }
+
+setKeymap()
+{
+    log "Set keymap..."
+    replaceVarValueQuoted "keymap" "/mnt/gentoo/etc/conf.d/keymaps" "pl"
+    log "Set keymap...done"
+}
+

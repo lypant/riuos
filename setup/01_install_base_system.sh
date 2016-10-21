@@ -110,6 +110,8 @@ main()
     # Root password
     #-------------------
     setRootPassword
+    # TODO Add services starting if needed
+    setKeymap
 
     #---------------------------------------
     # Post-install steps
