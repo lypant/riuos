@@ -596,3 +596,20 @@ setKeymap()
     log "Set keymap...done"
 }
 
+installSystemLogger()
+{
+    log "Install system logger..."
+    gentooChroot "emerge app-admin/sysklogd"
+    gentooChroot "emerge app-admin/logrotate"
+    gentooChroot "rc-update add sysklogd default"
+    log "Install system logger...done"
+}
+
+installDhcpcd()
+{
+    log "Install dhcpcd..."
+    gentooChroot "emerge net-misc/dhcpcd"
+    gentooChroot "rc-update add dhcpcd default"
+    log "Install dhcpcd...done"
+}
+

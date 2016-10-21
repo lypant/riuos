@@ -112,6 +112,9 @@ main()
     setRootPassword
     # TODO Add services starting if needed
     setKeymap
+    # TODO Add hwclock setting if needed
+    installSystemLogger
+    installDhcpcd
 
     #---------------------------------------
     # Post-install steps
