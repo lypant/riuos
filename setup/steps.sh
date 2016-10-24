@@ -641,3 +641,31 @@ installBootloader()
     log "Install bootloader...done"
 }
 
+configureBootloader()
+{
+    local bootPath="/mnt/gentoo/boot"
+    local cfgFile="$bootPath/extlinux/extlinux.conf"
+    local linux=$(ls $bootPath | grep vmlinuz)
+    local initrd=$(ls $bootPath | grep initramfs)
+    local append="root=/dev/sda4"
+
+    local timeout="30"
+    local menuTitle="RobCo Industries Simplified Bootloader"
+    local menuLabel="RobCo Industries Unified Operating System v0.1"
+
+    log "Configure bootloader..."
+
+    cmd "echo TIMEOUT $timeout >> $cfgFile"
+    cmd "echo ONTIMEOUT robco >> $cfgFile"
+    cmd "echo  >> $cfgFile"
+    cmd "echo UI menu.c32 >> $cfgFile"
+    cmd "echo MENU TITLE $menuTitle >> $cfgFile"
+    cmd "echo  >> $cfgFile"
+    cmd "echo LABEL robco >> $cfgFile"
+    cmd "echo \"    MENU LABEL $menuLabel\"" >> $cfgFile
+    cmd "echo \"    LINUX /boot/$linux\" >> $cfgFile"
+    cmd "echo \"    INITRD /boot/$initrd\" >> $cfgFile"
+    cmd "echo \"    APPEND $append\" >> $cfgFile"
+
+    log "Configure bootloader...done"
+}

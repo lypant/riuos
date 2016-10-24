@@ -116,6 +116,7 @@ main()
     installSystemLogger
     installDhcpcd
     installBootloader
+    configureBootloader
 
     #---------------------------------------
     # Post-install steps
