@@ -613,3 +613,31 @@ installDhcpcd()
     log "Install dhcpcd...done"
 }
 
+installBootloader()
+{
+    local src="/usr/share/syslinux"
+    local dst="/boot/extlinux"
+    local files="menu.c32 memdisk libcom32.c32 libutil.c32"
+
+    log "Install bootloader..."
+
+    # Use syslinux/extlinux as a bootloader
+    gentooChroot "emerge sys-boot/syslinux"
+
+    # Write MBR
+    gentooChroot "dd bs=440 conv=notrunc count=1 if=/usr/share/syslinux/mbr.bin of=/dev/sda"
+
+    # Install extlinux
+    gentooChroot "mkdir $dst"
+    gentooChroot "extlinux --install /boot/extlinux"
+    # TODO I'm skipping creation of /boot/boot -> /boot link - most probably not needed
+
+    # Copy necessary files
+    for file in $files
+    do
+        gentooChroot "cp $src/$file $dst"
+    done
+
+    log "Install bootloader...done"
+}
+

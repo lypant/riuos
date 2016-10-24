@@ -115,6 +115,7 @@ main()
     # TODO Add hwclock setting if needed
     installSystemLogger
     installDhcpcd
+    installBootloader
 
     #---------------------------------------
     # Post-install steps
