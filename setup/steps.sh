@@ -630,7 +630,7 @@ installBootloader()
     # Install extlinux
     gentooChroot "mkdir $dst"
     gentooChroot "extlinux --install /boot/extlinux"
-    # TODO I'm skipping creation of /boot/boot -> /boot link - most probably not needed
+    gentooChroot "ln -snf . /boot/boot"
 
     # Copy necessary files
     for file in $files
