@@ -213,20 +213,6 @@ mountBootPartition()
     log "Mount boot partition...done"
 }
 
-unmountBootPartition()
-{
-    log "Unmount boot partition..."
-    cmd "umount  /mnt/gentoo/boot"
-    log "Unmount boot partition...done"
-}
-
-unmountRootPartition()
-{
-    log "Unmount root partition..."
-    cmd "umount  /mnt/gentoo"
-    log "Unmount root partition...done"
-}
-
 getStage3Tarball()
 {
     local regEx=stage3-i686-[0-9]*.tar.bz2
@@ -669,3 +655,20 @@ configureBootloader()
 
     log "Configure bootloader...done"
 }
+
+unmountPartitions()
+{
+    local common="/mnt/gentoo"
+    local paths="$common/dev/shm $common/dev/pts $common/dev"
+    paths="$paths $common/boot $common/sys $common/proc $common"
+
+    log "Unmount partitions..."
+
+    for path in $paths
+    do
+        cmd "umount -l $path"
+    done
+
+    log "Unmount partitions...done"
+}
+
