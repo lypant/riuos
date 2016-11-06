@@ -10,6 +10,10 @@ Installation:
     curl -L https://github.com/lypant/riuos/tarball/<branch_name> | tar xz
 - change name of obtained folder to 'riuos'
 - go to riuos/setup and adjust any settings in scripts, if needed
-- start installation with execution of 01_install_base_system.sh script
+- start base system installation with execution of 01_install_base_system.sh script
+- if no errors occured, remove livecd and restart the machine
+- boot from hdd and log in as a root user
+- go to /riuos/setup
+- create regular user account, install programs and tools with execution of 02_install_programs.sh
 - TODO write next steps
 

@@ -24,8 +24,12 @@ source functions.sh
 #-------------------------------------------------------------------------------
 
 #---------------------------------------
-# Disks, partitions and file systems
+# Base system installation
 #---------------------------------------
+
+#-------------------
+# Disks, partitions and file systems
+#-------------------
 
 SYSTEM_HDD=sda
 
@@ -43,50 +47,60 @@ ROOT_PART_NB=4
 ROOT_PART_SIZE=""
 ROOT_PART_FS=ext4
 
-#---------------------------------------
+#-------------------
 # Stage3 tarball
-#---------------------------------------
+#-------------------
 
 S3_URL=http://distfiles.gentoo.org/releases/x86/autobuilds/current-install-x86-minimal
 S3_TARBALL=""   # Empty - autodetect
 
-#---------------------------------------
+#-------------------
 # Compilation options
-#---------------------------------------
+#-------------------
 
 CFLAGS="-march=pentium2 -mno-accumulate-outgoing-args -mno-fxsr -mno-sahf -O2"
 MAKEOPTS="-j2"
 
-#---------------------------------------
-# Profile
-#---------------------------------------
+#-------------------
+# Gentoo profile
+#-------------------
 
 #PROFILE="desktop"
 PROFILE="13.0"
 
-#---------------------------------------
+#-------------------
 # Use flags
-#---------------------------------------
+#-------------------
 
 USE_FLAGS=""    # No special needs at the moment
 
-#---------------------------------------
+#-------------------
 # Locales
-#---------------------------------------
+#-------------------
 
 LOCALE="en_US.utf8"
 
-#---------------------------------------
+#-------------------
 # Kernel
-#---------------------------------------
+#-------------------
 
 ARCH="i386"
 
-#---------------------------------------
+#-------------------
 # Ethernet interface
-#---------------------------------------
+#-------------------
 
 ETHERNET="enp0s12"
+
+#---------------------------------------
+# Programs installation
+#---------------------------------------
+
+#-------------------
+# Regular user
+#-------------------
+
+REGULAR_USER="adam"
 
 #-------------------------------------------------------------------------------
 # Base system installation
@@ -679,3 +693,46 @@ unmountPartitions()
     log "Unmount partitions...done"
 }
 
+#-------------------------------------------------------------------------------
+# Programs installation
+#-------------------------------------------------------------------------------
+
+createRegularUserAccount()
+{
+    log "Create regular user account..."
+    cmd "useradd -m -g uers -G wheel -s /bin/bash $REGULAR_USER"
+    log "Create regular user account...done"
+}
+
+setRegularUserPassword()
+{
+    local ask=1
+
+    log "Set regular user password..."
+
+    # Disable exit on error - to get a chance of correcting misspelled password
+    set +o errexit
+    while [ $ask -ne 0 ]; do
+        log "Provide password for regular user $REGULAR_USER"
+        cmd "passwd $REGULAR_USER"
+        ask=$?
+    done
+    # Enable exiting on error again
+    set -o errexit
+
+    log "Set regular user password...done"
+}
+
+installSudo()
+{
+    log "Install sudo..."
+    cmd "emerge app-admin/sudo"
+    log "Install sudo...done"
+}
+
+addRegularUserToSudoers()
+{
+    log "Add regular user to sudoers..."
+    cmd "echo \"$REGULAR_USER ALL=(ALL) ALL\" >> /etc/sudoers"
+    log "Add regular user to sudoers...done"
+}

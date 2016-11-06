@@ -2,10 +2,18 @@
 #===============================================================================
 # FILE:         01_install_base_system.sh
 #
-# USAGE:        Execute from shell, e.g. ./01_install_base_system.sh
+# USAGE:        Boot from Gentoo installation media.
+#               Obtain riuos installation scripts, e.g.
+#               curl -L https://github.com/lypant/riuos/tarball/01 | tar xz
+#               Rename unpacked directory to riuos, e.g. mv lypant* riuos
+#               Go to setup directory, e.g. cd /riuos/setup
+#               Execute the script from shell, e.g. ./01_install_base_system.sh
 #
-# DESCRIPTION:  Installs Gentoo Linux base system
-#               TODO Describe in more details
+# DESCRIPTION:  Installs Gentoo Linux base system using Gentoo installation cd.
+#               After successfull installation it is possible to boot system
+#               from a disk and log in as a root user.
+#               To continue with next stage of installation,
+#               see 02_install_programs.sh
 #===============================================================================
 
 # Treat unset variables as an error when peforming parameter expansion
