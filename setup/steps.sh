@@ -92,10 +92,6 @@ ETHERNET="enp0s12"
 # Base system installation
 #-------------------------------------------------------------------------------
 
-#---------------------------------------
-# Preparations
-#---------------------------------------
-
 createLogDir()
 {
     local logDir="../logs"
@@ -110,10 +106,6 @@ createLogDir()
         exit 1
     fi
 }
-
-#---------------------------------------
-# Disks, partitions and file systems
-#---------------------------------------
 
 checkInitialPartitionsCount()
 {
@@ -313,16 +305,6 @@ setupGentooRepos()
     log "Setup Gentoo repos...done"
 }
 
-copyDnsInfo()
-{
-    local src=/etc/resolv.conf
-    local dst=/mnt/gentoo/etc/
-
-    log "Copy DNS info..."
-    cmd "cp -L $src $dst"
-    log "Copy DNS info...done"
-}
-
 mountLiveFilesystems()
 {
     local fs=""
@@ -451,6 +433,13 @@ setLocales()
     log "Set locales...done"
 }
 
+setKeymap()
+{
+    log "Set keymap..."
+    replaceVarValueQuoted "keymap" "/mnt/gentoo/etc/conf.d/keymaps" "pl"
+    log "Set keymap...done"
+}
+
 installKernelSources()
 {
     log "Install kernel sources..."
@@ -522,6 +511,16 @@ configureFstab()
     log "Configure fstab...done"
 }
 
+copyDnsInfo()
+{
+    local src=/etc/resolv.conf
+    local dst=/mnt/gentoo/etc/
+
+    log "Copy DNS info..."
+    cmd "cp -L $src $dst"
+    log "Copy DNS info...done"
+}
+
 setHostname()
 {
     log "Set hostname..."
@@ -557,29 +556,12 @@ setNetworkStarting()
     log "Set network starting...done"
 }
 
-setRootPassword()
+installDhcpcd()
 {
-    local ask=1
-
-    log "Set root password..."
-
-    # Disable exit on error - to get a chance of correcting misspelled password
-    set +o errexit
-    while [ $ask -ne 0 ]; do
-        gentooChroot "passwd"
-        ask=$?
-    done
-    # Enable exiting on error again
-    set -o errexit
-
-    log "Set root password...done"
-}
-
-setKeymap()
-{
-    log "Set keymap..."
-    replaceVarValueQuoted "keymap" "/mnt/gentoo/etc/conf.d/keymaps" "pl"
-    log "Set keymap...done"
+    log "Install dhcpcd..."
+    gentooChroot "emerge net-misc/dhcpcd"
+    gentooChroot "rc-update add dhcpcd default"
+    log "Install dhcpcd...done"
 }
 
 installSystemLogger()
@@ -589,14 +571,6 @@ installSystemLogger()
     gentooChroot "emerge app-admin/logrotate"
     gentooChroot "rc-update add sysklogd default"
     log "Install system logger...done"
-}
-
-installDhcpcd()
-{
-    log "Install dhcpcd..."
-    gentooChroot "emerge net-misc/dhcpcd"
-    gentooChroot "rc-update add dhcpcd default"
-    log "Install dhcpcd...done"
 }
 
 installBootloader()
@@ -656,20 +630,22 @@ configureBootloader()
     log "Configure bootloader...done"
 }
 
-unmountPartitions()
+setRootPassword()
 {
-    local common="/mnt/gentoo"
-    local paths="$common/dev/shm $common/dev/pts $common/dev"
-    paths="$paths $common/boot $common/sys $common/proc $common"
+    local ask=1
 
-    log "Unmount partitions..."
+    log "Set root password..."
 
-    for path in $paths
-    do
-        cmd "umount -l $path"
+    # Disable exit on error - to get a chance of correcting misspelled password
+    set +o errexit
+    while [ $ask -ne 0 ]; do
+        gentooChroot "passwd"
+        ask=$?
     done
+    # Enable exiting on error again
+    set -o errexit
 
-    log "Unmount partitions...done"
+    log "Set root password...done"
 }
 
 copyRiuosFiles()
@@ -685,5 +661,21 @@ copyRiuosFiles()
     # This is only for livecd output and logs consistency
     log "Copy riuos files..."
     log "Copy riuos files...done"
+}
+
+unmountPartitions()
+{
+    local common="/mnt/gentoo"
+    local paths="$common/dev/shm $common/dev/pts $common/dev"
+    paths="$paths $common/boot $common/sys $common/proc $common"
+
+    log "Unmount partitions..."
+
+    for path in $paths
+    do
+        cmd "umount -l $path"
+    done
+
+    log "Unmount partitions...done"
 }
 

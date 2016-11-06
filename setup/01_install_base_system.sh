@@ -25,13 +25,13 @@ LOG_FILE="../logs/01_install_base_system.log"
 main()
 {
     #---------------------------------------
-    # Pre-install steps
+    # Preparations
     #---------------------------------------
     createLogDir
     log "Install base system..."
 
     #---------------------------------------
-    # Disks, partitions and file systems
+    # Partitions
     #---------------------------------------
     checkInitialPartitionsCount # Do not remove old partitions as safety measure
     createMbrPartition          # Does not need file system; just reserve space
@@ -40,45 +40,50 @@ main()
     createRootPartition
     checkCreatedPartitionsCount # Ensure all partitions were created
     setBootPartitionBootable
+
+    #---------------------------------------
+    # File systems
+    #---------------------------------------
     createBootFileSystem
     createSwap
     activateSwap
     createRootFileSystem
+
+    #---------------------------------------
+    # Mounting
+    #---------------------------------------
     mountRootPartition
     mountBootPartition          # Has to be mounted under root partition FS
 
     #---------------------------------------
-    # Stage 3 tarball
+    # Gentoo-specific configuration
     #---------------------------------------
     getStage3Tarball
-
-    #---------------------------------------
-    # Compilation options
-    #---------------------------------------
     setCompilationOptions
-
-    #---------------------------------------
-    # Mirrors, repos, DNS info
-    #---------------------------------------
     selectMirrors               # Hardcoded servers
     #selectMirrorsAutomatically  # Obtain servers - for some reason only 1
     setupGentooRepos
-    copyDnsInfo
 
     #---------------------------------------
-    # Chrooting
+    # Configure Portage
     #---------------------------------------
     mountLiveFilesystems
     installPortageSnapshot
     selectProfile
     setUseFlags
     updateWorldSet
+
+    #---------------------------------------
+    # Localization
+    #---------------------------------------
     setTimeZone
     setLocales
+    setKeymap
+    # TODO Add hwclock setting if needed
 
-    #-------------------
+    #---------------------------------------
     # Kernel
-    #-------------------
+    #---------------------------------------
     installKernelSources
     generateDefaultKernelConfig
     # TODO Add here kernel options configuration step; for now use defaults
@@ -90,27 +95,36 @@ main()
     # TODO Add here kernel modules automatic loading on startup if needed
     installFirmware
 
-    #-------------------
-    # File system
-    #-------------------
+    #---------------------------------------
+    # Fstab
+    #---------------------------------------
     configureFstab
 
-    #-------------------
+    #---------------------------------------
     # Networking
-    #-------------------
+    #---------------------------------------
+    copyDnsInfo
     setHostname
     installNetifrc
     setDhcp
     setNetworkStarting
-
-    # TODO Add services starting if needed
-    setKeymap
-    # TODO Add hwclock setting if needed
-    installSystemLogger
     installDhcpcd
+    # TODO Add services starting if needed
+
+    #---------------------------------------
+    # System logger
+    #---------------------------------------
+    installSystemLogger
+
+    #---------------------------------------
+    # Bootloader
+    #---------------------------------------
     installBootloader
     configureBootloader
 
+    #---------------------------------------
+    # Root account
+    #---------------------------------------
     setRootPassword
 
     log "Install base system...done"
