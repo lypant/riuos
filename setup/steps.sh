@@ -672,3 +672,18 @@ unmountPartitions()
     log "Unmount partitions...done"
 }
 
+copyRiuosFiles()
+{
+    local src="/root/riuos"
+    local dst="/mnt/gentoo/riuos"
+
+    # Do not perform typical logging in this function...
+    # This would spoil nice logs copied to new system
+    mkdir -p $dst
+    cp -R $src/* $dst
+
+    # This is only for livecd output and logs consistency
+    log "Copy riuos files..."
+    log "Copy riuos files...done"
+}
+

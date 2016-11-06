@@ -81,10 +81,7 @@ main()
     #-------------------
     installKernelSources
     generateDefaultKernelConfig
-    # TODO Skipping scripted kernel options config for now - do it manually
-    echo "KERNEL OPTIONS SETTING NOT IMPLEMENTED FOR NOW..."
-    echo "...CONFIGURE OPTIONS MANUALLY AND THEN CONTINUE WITH SCRIPTS"
- exit
+    # TODO Add here kernel options configuration step; for now use defaults
     compileKernel
     installKernelModules
     installKernel
@@ -106,10 +103,6 @@ main()
     setDhcp
     setNetworkStarting
 
-    #-------------------
-    # Root password
-    #-------------------
-    setRootPassword
     # TODO Add services starting if needed
     setKeymap
     # TODO Add hwclock setting if needed
@@ -118,12 +111,15 @@ main()
     installBootloader
     configureBootloader
 
+    setRootPassword
+
+    log "Install base system...done"
+
     #---------------------------------------
     # Post-install steps
     #---------------------------------------
+    copyRiuosFiles
     unmountPartitions
-
-    log "Install base system...done"
 }
 
 #-------------------------------------------------------------------------------
