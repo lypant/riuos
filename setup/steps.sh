@@ -305,6 +305,16 @@ setupGentooRepos()
     log "Setup Gentoo repos...done"
 }
 
+copyDnsInfo()
+{
+    local src=/etc/resolv.conf
+    local dst=/mnt/gentoo/etc/
+
+    log "Copy DNS info..."
+    cmd "cp -L $src $dst"
+    log "Copy DNS info...done"
+}
+
 mountLiveFilesystems()
 {
     local fs=""
@@ -509,16 +519,6 @@ configureFstab()
     addFstabEntry /dev/cdrom /mnt/cdrom  auto noauto,ro      0 0
     addFstabEntry /dev/fd0   /mnt/floppy auto noauto         0 0
     log "Configure fstab...done"
-}
-
-copyDnsInfo()
-{
-    local src=/etc/resolv.conf
-    local dst=/mnt/gentoo/etc/
-
-    log "Copy DNS info..."
-    cmd "cp -L $src $dst"
-    log "Copy DNS info...done"
 }
 
 setHostname()

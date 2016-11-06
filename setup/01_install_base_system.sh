@@ -63,6 +63,7 @@ main()
     selectMirrors               # Hardcoded servers
     #selectMirrorsAutomatically  # Obtain servers - for some reason only 1
     setupGentooRepos
+    copyDnsInfo
 
     #---------------------------------------
     # Configure Portage
@@ -103,7 +104,6 @@ main()
     #---------------------------------------
     # Networking
     #---------------------------------------
-    copyDnsInfo
     setHostname
     installNetifrc
     setDhcp
