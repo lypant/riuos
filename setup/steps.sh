@@ -700,7 +700,7 @@ unmountPartitions()
 createRegularUserAccount()
 {
     log "Create regular user account..."
-    cmd "useradd -m -g uers -G wheel -s /bin/bash $REGULAR_USER"
+    cmd "useradd -m -g users -G wheel -s /bin/bash $REGULAR_USER"
     log "Create regular user account...done"
 }
 
