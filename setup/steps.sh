@@ -736,3 +736,11 @@ addRegularUserToSudoers()
     cmd "echo \"$REGULAR_USER ALL=(ALL) ALL\" >> /etc/sudoers"
     log "Add regular user to sudoers...done"
 }
+
+setSudoBashCompletion()
+{
+    log "Set sudo bash completion..."
+    cmd "echo \"complete -cf sudo\" >> /home/$REGULAR_USER/.bashrc"
+    log "Set sudo bash completion...done"
+}
+

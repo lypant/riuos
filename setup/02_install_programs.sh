@@ -43,6 +43,7 @@ main()
     setRegularUserPassword
     installSudo
     addRegularUserToSudoers
+    setSudoBashCompletion
 
     log "Install programs...done"
 }
