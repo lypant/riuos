@@ -665,7 +665,7 @@ setRootPassword()
 copyRiuosFiles()
 {
     local src="/root/riuos"
-    local dst="/mnt/gentoo/riuos"
+    local dst="/mnt/gentoo/root/riuos"
 
     # Do not perform typical logging in this function...
     # This would spoil nice logs copied to new system
@@ -742,5 +742,43 @@ setSudoBashCompletion()
     log "Set sudo bash completion..."
     cmd "echo \"complete -cf sudo\" >> /home/$REGULAR_USER/.bashrc"
     log "Set sudo bash completion...done"
+}
+
+installGit()
+{
+    log "Install git..."
+    cmd "emerge dev-vcs/git"
+    log "Install git...done"
+}
+
+configureGitUser()
+{
+    log "Configure git user..."
+    cmd "git config --global user.email \"lypant@tlen.pl\""
+    err "$?" "$FUNCNAME" "failed to set git user email"
+    cmd "git config --global user.name \"lypant\""
+    err "$?" "$FUNCNAME" "failed to set git user name"
+    log "Configure git user...done"
+}
+
+cloneRiuosRepo()
+{
+    log "Clone riuos repo..."
+    cmd "git clone https://github.com/lypant/riuos /home/$REGULAR_USER/riuos"
+    log "Clone riuos repo...done"
+}
+
+checkoutCurrentRiuosBranch()
+{
+    log "Checkout current riuos branch..."
+    cmd "git -C /home/$REGULAR_USER/riuos checkout 01"
+    log "Checkout current riuos branch...done"
+}
+
+copyOverRiuosFiles()
+{
+    log "Copy over riuos files..."
+    cmd "cp -r /root/riuos /home/$REGULAR_USER"
+    log "Copy over riuos files...done"
 }
 

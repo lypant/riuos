@@ -45,6 +45,15 @@ main()
     addRegularUserToSudoers
     setSudoBashCompletion
 
+    #---------------------------------------
+    # Git and riuos files
+    #---------------------------------------
+    intallGit
+    configureGitUser
+    cloneRiuosRepo
+    checkoutCurrentRiuosBranch
+    copyOverRiuosFiles
+
     log "Install programs...done"
 }
 
