@@ -755,9 +755,7 @@ configureGitUser()
 {
     log "Configure git user..."
     cmd "git config --global user.email \"lypant@tlen.pl\""
-    err "$?" "$FUNCNAME" "failed to set git user email"
     cmd "git config --global user.name \"lypant\""
-    err "$?" "$FUNCNAME" "failed to set git user name"
     log "Configure git user...done"
 }
 

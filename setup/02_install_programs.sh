@@ -48,7 +48,7 @@ main()
     #---------------------------------------
     # Git and riuos files
     #---------------------------------------
-    intallGit
+    installGit
     configureGitUser
     cloneRiuosRepo
     checkoutCurrentRiuosBranch
