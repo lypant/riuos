@@ -47,61 +47,6 @@ ROOT_PART_NB=4
 ROOT_PART_SIZE=""
 ROOT_PART_FS=ext4
 
-#-------------------
-# Stage3 tarball
-#-------------------
-
-S3_URL=http://distfiles.gentoo.org/releases/x86/autobuilds/current-install-x86-minimal
-S3_TARBALL=""   # Empty - autodetect
-
-#-------------------
-# Compilation options
-#-------------------
-
-CFLAGS="-march=pentium2 -mno-accumulate-outgoing-args -mno-fxsr -mno-sahf -O2"
-MAKEOPTS="-j2"
-
-#-------------------
-# Gentoo profile
-#-------------------
-
-#PROFILE="desktop"
-PROFILE="13.0"
-
-#-------------------
-# Use flags
-#-------------------
-
-USE_FLAGS=""    # No special needs at the moment
-
-#-------------------
-# Locales
-#-------------------
-
-LOCALE="en_US.utf8"
-
-#-------------------
-# Kernel
-#-------------------
-
-ARCH="i386"
-
-#-------------------
-# Ethernet interface
-#-------------------
-
-ETHERNET="enp0s12"
-
-#---------------------------------------
-# Programs installation
-#---------------------------------------
-
-#-------------------
-# Regular user
-#-------------------
-
-REGULAR_USER="adam"
-
 #-------------------------------------------------------------------------------
 # Base system installation
 #-------------------------------------------------------------------------------
@@ -229,30 +174,33 @@ getStage3Tarball()
     local localDigests=""
     local expectedHash=""
     local calculatedHash=""
+    local s3Url="http://distfiles.gentoo.org"
+          s3Url="$s3Url/releases/x86/autobuilds/current-install-x86-minimal"
+    local s3Tarball="" # Empty - autodetect
 
     log "Get stage3 tarball..."
 
     # Check/get tarball file name
-    if [[ -z "$S3_TARBALL" ]]; then
+    if [[ -z "$s3Tarball" ]]; then
         # If name of tarball was not configured explicitly - obtain one from web
-        S3_TARBALL=$(curl -sL $S3_URL | grep -o $regEx | head -n 1)
-        log "Using current stage3 tarball found in web: $S3_TARBALL"
+        s3Tarball=$(curl -sL $s3Url | grep -o $regEx | head -n 1)
+        log "Using current stage3 tarball found in web: $s3Tarball"
     else
-        log "Using stage3 tarball specified in config variable: $S3_TARBALL"
+        log "Using stage3 tarball specified in config variable: $s3Tarball"
     fi
 
     log "Downloading stage3 tarball file"
-    remoteTarball=$S3_URL/$S3_TARBALL
-    localTarball=$dstDir/$S3_TARBALL
+    remoteTarball=$s3Url/$s3Tarball
+    localTarball=$dstDir/$s3Tarball
     downloadFile $remoteTarball $localTarball
 
     log "Downloading stage3 tarball digest file"
     remoteDigests=$remoteTarball.DIGESTS
-    localDigests=$dstDir/$S3_TARBALL.DIGESTS
+    localDigests=$dstDir/$s3Tarball.DIGESTS
     downloadFile $remoteDigests $localDigests
 
     log "Verifying tarball integrity"
-    expectedHash=`grep $S3_TARBALL $localDigests | head -n 1 | awk '{print $1;}'`
+    expectedHash=`grep $s3Tarball $localDigests | head -n 1 | awk '{print $1;}'`
     calculatedHash=`sha512sum $localTarball | awk '{print $1;}'`
     if [[ "$expectedHash" == "$calculatedHash" ]];then
         log "Tarball hash ok"
@@ -277,12 +225,15 @@ getStage3Tarball()
 setCompilationOptions()
 {
     local file=/mnt/gentoo/etc/portage/make.conf
+    local cflags="-march=pentium2 -mno-accumulate-outgoing-args"
+          cflags="$cflags -mno-fxsr -mno-sahf -O2"
+    local makeopts="-j2"
 
     log "Set compilation options..."
     log "Replace CFLAGS"
-    replaceVarValueQuoted CFLAGS $file "$CFLAGS"
+    replaceVarValueQuoted CFLAGS $file "$cflags"
     log "Set MAKEOPTS"
-    cmd "echo \"MAKEOPTS=\\\"$MAKEOPTS\\\"\" >> $file"
+    cmd "echo \"MAKEOPTS=\\\"$makeopts\\\"\" >> $file"
     log "Set compilation options...done"
 }
 
@@ -365,18 +316,20 @@ selectProfile()
     local chrootedFile="/tmp/profile"
     local file="/mnt/gentoo$chrootedFile"
     local profileNb=0
+    #local profile="desktop"
+    local profile="13.0"
 
     log "Select profile..."
 
     log "Find profile nb"
-    findProfile $PROFILE $chrootedFile
+    findProfile $profile $chrootedFile
 
     if [[ -s "$file" ]]; then
         profileNb=$(<$file)
-        log "Setting profile $profileNb - $PROFILE"
+        log "Setting profile $profileNb - $profile"
         gentooChroot "eselect profile set $profileNb"
     else
-        log "Profile $PROFILE not found; available profiles:"
+        log "Profile $profile not found; available profiles:"
         gentooChroot "eselect profile list"
         exit 1
     fi
@@ -389,9 +342,10 @@ selectProfile()
 setUseFlags()
 {
     local file="/mnt/gentoo/etc/portage/make.conf"
+    local useFlags=""    # No special needs at the moment
 
     log "Set use flags..."
-    replaceVarValueQuoted USE $file "$USE_FLAGS"
+    replaceVarValueQuoted USE $file "$useFlags"
     log "Set use flags...done"
 }
 
@@ -421,6 +375,7 @@ setLocales()
     local chrootedFile="/tmp/locale"
     local file="/mnt/gentoo$chrootedFile"
     local localeNb=0
+    local locale="en_US.utf8"
 
     log "Set locales..."
 
@@ -437,14 +392,14 @@ setLocales()
     gentooChroot "locale-gen"
 
     log "Find locale nb"
-    findLocale $LOCALE $chrootedFile
+    findLocale $locale $chrootedFile
 
     if [[ -s "$file" ]]; then
         localeNb=$(<$file)
-        log "Setting locale $localeNb - $LOCALE"
+        log "Setting locale $localeNb - $locale"
         gentooChroot "eselect locale set $localeNb"
     else
-        log "Locale $LOCALE not found; available locales:"
+        log "Locale $locale not found; available locales:"
         gentooChroot "eselect locale list"
         exit 1
     fi
@@ -474,7 +429,7 @@ installKernelSources()
 generateDefaultKernelConfig()
 {
     log "Generate default kernel config..."
-    gentooChroot "make -C /usr/src/linux ${ARCH}_defconfig"
+    gentooChroot "make -C /usr/src/linux i386_defconfig"
     log "Generate default kernel config...done"
 }
 
@@ -553,7 +508,7 @@ installNetifrc()
 setDhcp()
 {
     log "Set dhcp..."
-    cmd "echo config_${ETHERNET}=\"dhcp\" >> /mnt/gentoo/etc/conf.d/net"
+    cmd "echo config_enp0s12=\"dhcp\" >> /mnt/gentoo/etc/conf.d/net"
     log "Set dhcp...done"
 }
 
@@ -561,7 +516,7 @@ setNetworkStarting()
 {
     local common="/etc/init.d"
     local target="$common/net.lo"
-    local linkFile="net.$ETHERNET"
+    local linkFile="net.enp0s12"
     local link="$common/$linkFile"
 
     log "Set network starting..."
@@ -700,7 +655,7 @@ unmountPartitions()
 createRegularUserAccount()
 {
     log "Create regular user account..."
-    cmd "useradd -m -g users -G wheel -s /bin/bash $REGULAR_USER"
+    cmd "useradd -m -g users -G wheel -s /bin/bash adam"
     log "Create regular user account...done"
 }
 
@@ -713,8 +668,8 @@ setRegularUserPassword()
     # Disable exit on error - to get a chance of correcting misspelled password
     set +o errexit
     while [ $ask -ne 0 ]; do
-        log "Provide password for regular user $REGULAR_USER"
-        cmd "passwd $REGULAR_USER"
+        log "Provide password for regular user adam"
+        cmd "passwd adam"
         ask=$?
     done
     # Enable exiting on error again
@@ -733,14 +688,14 @@ installSudo()
 addRegularUserToSudoers()
 {
     log "Add regular user to sudoers..."
-    cmd "echo \"$REGULAR_USER ALL=(ALL) ALL\" >> /etc/sudoers"
+    cmd "echo \"adam ALL=(ALL) ALL\" >> /etc/sudoers"
     log "Add regular user to sudoers...done"
 }
 
 setSudoBashCompletion()
 {
     log "Set sudo bash completion..."
-    cmd "echo \"complete -cf sudo\" >> /home/$REGULAR_USER/.bashrc"
+    cmd "echo \"complete -cf sudo\" >> /home/adam/.bashrc"
     log "Set sudo bash completion...done"
 }
 
@@ -762,21 +717,21 @@ configureGitUser()
 cloneRiuosRepo()
 {
     log "Clone riuos repo..."
-    cmd "git clone https://github.com/lypant/riuos /home/$REGULAR_USER/riuos"
+    cmd "git clone https://github.com/lypant/riuos /home/adam/riuos"
     log "Clone riuos repo...done"
 }
 
 checkoutCurrentRiuosBranch()
 {
     log "Checkout current riuos branch..."
-    cmd "git -C /home/$REGULAR_USER/riuos checkout 01"
+    cmd "git -C /home/adam/riuos checkout 01"
     log "Checkout current riuos branch...done"
 }
 
 copyOverRiuosFiles()
 {
     log "Copy over riuos files..."
-    cmd "cp -r /root/riuos /home/$REGULAR_USER"
+    cmd "cp -r /root/riuos /home/adam"
     log "Copy over riuos files...done"
 }
 
@@ -790,17 +745,17 @@ installVim()
 installPathogen()
 {
     log "Install pathogen..."
-    cmd "mkdir -p /home/$REGULAR_USER/.vim/autoload"
-    cmd "mkdir -p /home/$REGULAR_USER/.vim/bundle"
+    cmd "mkdir -p /home/adam/.vim/autoload"
+    cmd "mkdir -p /home/adam/.vim/bundle"
     downloadFile "https://tpo.pe/pathogen.vim"\
-                 "/home/$REGULAR_USER/.vim/autoload/pathogen.vim"
+                 "/home/adam/.vim/autoload/pathogen.vim"
     log "Install pathogen...done"
 }
 
 installNerdTree()
 {
     log "Install nerdtree..."
-    cmd "git -C /home/$REGULAR_USER/.vim/bundle"\
+    cmd "git -C /home/adam/.vim/bundle"\
         "clone https://github.com/scrooloose/nerdtree.git"
     log "Install nerdtree...done"
 }
@@ -808,7 +763,7 @@ installNerdTree()
 installNerdCommenter()
 {
     log "Install nerdcommenter..."
-    cmd "git -C /home/$REGULAR_USER/.vim/bundle"\
+    cmd "git -C /home/adam/.vim/bundle"\
         "clone https://github.com/scrooloose/nerdcommenter.git"
     log "Install nerdcommenter...done"
 }
@@ -816,7 +771,7 @@ installNerdCommenter()
 installTagbar()
 {
     log "Install tagbar..."
-    cmd "git -C /home/$REGULAR_USER/.vim/bundle"\
+    cmd "git -C /home/adam/.vim/bundle"\
         "clone https://github.com/majutsushi/tagbar.git"
     log "Install tagbar...done"
 }
