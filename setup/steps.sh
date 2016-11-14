@@ -780,3 +780,44 @@ copyOverRiuosFiles()
     log "Copy over riuos files...done"
 }
 
+installVim()
+{
+    log "Install vim..."
+    cmd "emerge app-editors/vim"
+    log "Install vim...done"
+}
+
+installPathogen()
+{
+    log "Install pathogen..."
+    cmd "mkdir -p /home/$REGULAR_USER/.vim/autoload"
+    cmd "mkdir -p /home/$REGULAR_USER/.vim/bundle"
+    downloadFile "https://tpo.pe/pathogen.vim"\
+                 "/home/$REGULAR_USER/.vim/autoload/pathogen.vim"
+    log "Install pathogen...done"
+}
+
+installNerdTree()
+{
+    log "Install nerdtree..."
+    cmd "git -C /home/$REGULAR_USER/.vim/bundle"\
+        "clone https://github.com/scrooloose/nerdcommenter.git"
+    log "Install nerdtree...done"
+}
+
+installNerdCommenter()
+{
+    log "Install nerdcommenter..."
+    cmd "git -C /home/$REGULAR_USER/.vim/bundle"\
+        "clone https://github.com/scrooloose/nerdcommenter.git"
+    log "Install nerdcommenter...done"
+}
+
+installTagbar()
+{
+    log "Install tagbar..."
+    cmd "git -C /home/$REGULAR_USER/.vim/bundle"\
+        "clone https://github.com/majutsushi/tagbar.git"
+    log "Install tagbar...done"
+}
+

@@ -54,6 +54,15 @@ main()
     checkoutCurrentRiuosBranch
     copyOverRiuosFiles
 
+    #---------------------------------------
+    # Vim
+    #---------------------------------------
+    installVim
+    installPathogen
+    installNerdTree
+    installNerdCommenter
+    installTagbar
+
     log "Install programs...done"
 }
 
