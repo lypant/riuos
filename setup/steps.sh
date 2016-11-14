@@ -801,7 +801,7 @@ installNerdTree()
 {
     log "Install nerdtree..."
     cmd "git -C /home/$REGULAR_USER/.vim/bundle"\
-        "clone https://github.com/scrooloose/nerdcommenter.git"
+        "clone https://github.com/scrooloose/nerdtree.git"
     log "Install nerdtree...done"
 }
 
