@@ -284,7 +284,7 @@ installDotfile()
 
     # Backup original dotfile, if present
     if [[ -e "/home/adam/$dotfile" ]]; then
-        cmd "cp /home/adam/$dotfile /home/adam/${dotfile}_$now"
+        cmd "mv /home/adam/$dotfile /home/adam/${dotfile}_$now"
     fi
 
     # Create link to a new dotfile
