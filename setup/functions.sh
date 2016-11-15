@@ -260,3 +260,34 @@ addFstabEntry()
 
     cmd "echo $entry >> /mnt/gentoo/etc/fstab"
 }
+
+# @brief Creates a symbolic link pointing to a dotfile from ~/riuos/dotfiles
+# @param name name of a dotfile, e.g. .vimrc
+# @param path path where a dotfile should be installed, relative to ~; optional
+# @example installDotfile ".vimrc"
+# @example installDotfile "solarized.theme" ".cmus"
+installDotfile()
+{
+    local name="$1"
+    local path="${2:-}"
+    local dotfile=""
+    local now=`date +"%Y%m%d_%H%M"`
+
+    if [[ -z "$path" ]]; then
+        dotfile="$name"
+    else
+        dotfile="$path/$name"
+    fi
+
+    # Ensure that dotfile path exists
+    cmd "mkdir -p /home/adam/$path"
+
+    # Backup original dotfile, if present
+    if [[ -e "/home/adam/$dotfile" ]]; then
+        cmd "cp /home/adam/$dotfile /home/adam/${dotfile}_$now"
+    fi
+
+    # Create link to a new dotfile
+    cmd "ln -s /home/adam/riuos/dotfiles/$dotfile /home/adam/$dotfile"
+}
+

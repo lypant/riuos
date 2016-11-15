@@ -776,3 +776,17 @@ installTagbar()
     log "Install tagbar...done"
 }
 
+installVimrcDotfile()
+{
+    log "Install .vimrc dotfile..."
+    installDotfile .vimrc
+    log "Install .vimrc dotfile...done"
+}
+
+changeHomeOwnership()
+{
+    log "Change home dir ownership..."
+    cmd "chown -R adam:users /home/adam"
+    log "Change home dir ownership...done"
+}
+

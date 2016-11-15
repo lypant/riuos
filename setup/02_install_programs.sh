@@ -62,6 +62,12 @@ main()
     installNerdTree
     installNerdCommenter
     installTagbar
+    installVimrcDotfile
+
+    #---------------------------------------
+    # Final steps
+    #---------------------------------------
+    changeHomeOwnership
 
     log "Install programs...done"
 }
