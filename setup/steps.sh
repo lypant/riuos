@@ -783,6 +783,13 @@ installVimrcDotfile()
     log "Install .vimrc dotfile...done"
 }
 
+installRanger()
+{
+    log "Install ranger..."
+    cmd "emerge app-misc/ranger"
+    log "Install ranger...done"
+}
+
 changeHomeOwnership()
 {
     log "Change home dir ownership..."
