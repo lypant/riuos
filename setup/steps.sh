@@ -790,6 +790,20 @@ installRanger()
     log "Install ranger...done"
 }
 
+installTmux()
+{
+    log "Install tmux..."
+    cmd "emerge app-misc/tmux"
+    log "Install tmux...done"
+}
+
+installTmuxconfDotfile()
+{
+    log "Install .tmux.conf dotfile..."
+    installDotfile .tmux.conf
+    log "Install .tmux.conf dotfile...done"
+}
+
 changeHomeOwnership()
 {
     log "Change home dir ownership..."

@@ -68,6 +68,8 @@ main()
     # Utilities
     #---------------------------------------
     installRanger
+    installTmux
+    installTmuxconfDotfile
 
     #---------------------------------------
     # Final steps
