@@ -811,6 +811,13 @@ installGentoolkit()
     log "Install gentoolkit...done"
 }
 
+installPciutils()
+{
+    log "Install pciutils..."
+    cmd "emerge sys-apps/pciutils"
+    log "Install pciutils...done"
+}
+
 changeHomeOwnership()
 {
     log "Change home dir ownership..."

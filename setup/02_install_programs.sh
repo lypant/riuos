@@ -65,12 +65,17 @@ main()
     installVimrcDotfile
 
     #---------------------------------------
-    # Utilities
+    # Console based user interface programs
     #---------------------------------------
     installRanger
     installTmux
     installTmuxconfDotfile
+
+    #---------------------------------------
+    # Utilities
+    #---------------------------------------
     installGentoolkit
+    installPciutils
 
     #---------------------------------------
     # Final steps
