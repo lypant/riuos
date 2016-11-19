@@ -70,6 +70,7 @@ main()
     installRanger
     installTmux
     installTmuxconfDotfile
+    installGentoolkit
 
     #---------------------------------------
     # Final steps

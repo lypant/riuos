@@ -804,6 +804,13 @@ installTmuxconfDotfile()
     log "Install .tmux.conf dotfile...done"
 }
 
+installGentoolkit()
+{
+    log "Install gentoolkit..."
+    cmd "emerge app-portage/gentoolkit"
+    log "Install gentoolkit...done"
+}
+
 changeHomeOwnership()
 {
     log "Change home dir ownership..."
