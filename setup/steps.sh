@@ -342,7 +342,7 @@ selectProfile()
 setUseFlags()
 {
     local file="/mnt/gentoo/etc/portage/make.conf"
-    local useFlags=""    # No special needs at the moment
+    local useFlags="alsa"
 
     log "Set use flags..."
     replaceVarValueQuoted USE $file "$useFlags"
@@ -431,6 +431,43 @@ generateDefaultKernelConfig()
     log "Generate default kernel config..."
     gentooChroot "make -C /usr/src/linux i386_defconfig"
     log "Generate default kernel config...done"
+}
+
+backupDefaultKernelConfig()
+{
+    local srcDir="/mnt/gentoo/usr/src/linux"
+    local file=".config"
+    local dstDir="$srcDir/riuos_backups"
+
+    log "Backup default kernel config..."
+    backupFile "$srcDir" "$file" "$dstDir"
+    cmd "echo >> $srcDir/$file"
+    cmd "echo '# Options added by riuos setup scripts' >> $srcDir/$file"
+    log "Backup default kernel config...done"
+}
+
+setKernelConfigForAlsa()
+{
+    local srcDir="/mnt/gentoo/usr/src/linux"
+    local file=".config"
+    local backupDir="$srcDir/rious_backups"
+
+    log "Set kernel config for alsa..."
+
+    # Backup current config
+    backupFile "$srcDir" "$file" "$backupDir"
+
+    # Change existing options
+    setKernelOption CONFIG_SND_RAWMIDI_SEQ
+    setKernelOption CONFIG_SND_OPL3_LIB_SEQ
+    setKernelOption CONFIG_SND_CMIPCI
+
+    # Add new options
+    addKernelOption CONFIG_SND_RAWMIDI
+    addKernelOption CONFIG_SND_MPU401_UART
+    addKernelOption CONFIG_SND_OPL3_LIB
+
+    log "Set kernel config for alsa...done"
 }
 
 compileKernel()

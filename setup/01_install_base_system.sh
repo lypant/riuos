@@ -95,7 +95,9 @@ main()
     #---------------------------------------
     installKernelSources
     generateDefaultKernelConfig
-    # TODO Add here kernel options configuration step; for now use defaults
+    backupDefaultKernelConfig
+    setKernelConfigForAlsa
+    # TODO Add here more kernel options configuration steps if needed
     compileKernel
     installKernelModules
     installKernel

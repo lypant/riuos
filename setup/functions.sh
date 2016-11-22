@@ -271,7 +271,7 @@ installDotfile()
     local name="$1"
     local path="${2:-}"
     local dotfile=""
-    local now=`date +"%Y%m%d_%H%M"`
+    local now=`date +"%Y%m%d_%H%M%S_%N"`
 
     if [[ -z "$path" ]]; then
         dotfile="$name"
@@ -289,5 +289,70 @@ installDotfile()
 
     # Create link to a new dotfile
     cmd "ln -s /home/adam/riuos/dotfiles/$dotfile /home/adam/$dotfile"
+}
+
+# @brief Creates backup of given file; appends date and time to a file name
+# @param srcDir directory of a file to backup
+# @param file name of the file to backup
+# @param dstDir directory where a backup file will be copied to
+# @note Does not delete original file
+# @example backupFile /usr/src/linux .config /usr/src/linux/config_backups
+backupFile()
+{
+    local srcDir="$1"
+    local file="$2"
+    local dstDir="$3"
+    local now=`date +"%Y%m%d_%H%M%S_%N"`
+
+    # Ensure backup directory exists
+    cmd "mkdir -p $dstDir"
+    # Create backup
+    cmd "cp $srcDir/$file $dstDir/${file}_$now"
+}
+
+# @brief Adds new option to the kernel config file
+# @param option option to be set, e.g. CONFIG_SND_RAWMIDI
+# @param value value to be set; default is 'y' without quotes; e.g. y; e.g. m
+# @param file file to be modified; default /mnt/gentoo/usr/src/linux/.config
+# @note Does not use quotes for the value
+# @example addKernelOption CONFIG_SND_RAWMDIDI
+# @example addKernelOption CONFIG_SND_RAWMDIDI y
+# @example addKernelOption CONFIG_NF_LOG_COMMON m
+addKernelOption()
+{
+    local option="$1"
+    local value="${2:-y}"
+    local file="${3:-/mnt/gentoo/usr/src/linux/.config}"
+
+    cmd "echo $option=$value >> $file"
+}
+
+# @brief Replaces the line with an option with the option with the new value, for all occurences in a file
+# @param option option to be found, e.g. CONFIG_SND_RAWMIDI_SEQ
+# @param value value to be set; default y; e.g. y, e.g. m
+# @param file file to be modified; default /mnt/gentoo/usr/src/linux/.config
+# @example setKernelOption CONFIG_SND_RAWMIDI_SEQ
+setKernelOption()
+{
+    local option="$1"
+    local value="${2:-y}"
+    local file="${3:-/mnt/gentoo/usr/src/linux/.config}"
+    local err=0
+
+    # Temporarily disable exiting script on error to show msg on failure...
+    set +o errexit
+
+    # Only first occurence (0,)
+    # Only whole word match (\b\b)
+    #cmd "sed -i \"0,/\b$option\b/{s/.*/$option=$value/;h};\\\${x;/./{x;q0};x;q1}\" $file"
+    cmd "sed -i \"/\b$option\b/{s/.*/$option=$value/;h};\\\${x;/./{x;q0};x;q1}\" $file"
+    err="$?"
+    if [[ "$err" -ne 0 ]]; then
+        log "Failed to replace option $var; err: $err; aborting script"
+        exit $err
+    fi
+
+    # Re-enable exiting script on error
+    set -o errexit
 }
 
