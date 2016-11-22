@@ -450,7 +450,7 @@ setKernelConfigForAlsa()
 {
     local srcDir="/mnt/gentoo/usr/src/linux"
     local file=".config"
-    local backupDir="$srcDir/rious_backups"
+    local backupDir="$srcDir/riuos_backups"
 
     log "Set kernel config for alsa..."
 
