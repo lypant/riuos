@@ -72,6 +72,12 @@ main()
     installTmuxconfDotfile
 
     #---------------------------------------
+    # Sound
+    #---------------------------------------
+    installAlsa
+    configureAlsa
+
+    #---------------------------------------
     # Utilities
     #---------------------------------------
     installGentoolkit

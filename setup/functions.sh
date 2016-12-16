@@ -342,13 +342,35 @@ setKernelOption()
     # Temporarily disable exiting script on error to show msg on failure...
     set +o errexit
 
-    # Only first occurence (0,)
-    # Only whole word match (\b\b)
-    #cmd "sed -i \"0,/\b$option\b/{s/.*/$option=$value/;h};\\\${x;/./{x;q0};x;q1}\" $file"
     cmd "sed -i \"/\b$option\b/{s/.*/$option=$value/;h};\\\${x;/./{x;q0};x;q1}\" $file"
     err="$?"
     if [[ "$err" -ne 0 ]]; then
-        log "Failed to replace option $var; err: $err; aborting script"
+        log "Failed to set kernel option $option; err: $err; aborting script"
+        exit $err
+    fi
+
+    # Re-enable exiting script on error
+    set -o errexit
+}
+
+# @brief Appends commented out option to a given file
+# @param option option to be added
+# @param file file to be modified; default /mnt/gentoo/usr/src/linux/.config
+# @example addUnsetKernelOption CONFIG_TOUCHSCREEN_WM97XX
+# @note Resulting line is e.g. "# CONFIG_TOUCHSCREEN_WM97XX is not set"
+addUnsetKernelOption()
+{
+    local option="$1"
+    local file="${2:-/mnt/gentoo/usr/src/linux/.config}"
+    local err=0
+
+    # Temporarily disable exiting script on error to show msg on failure...
+    set +o errexit
+
+    cmd "echo \"# $option is not set\" >> $file"
+    err="$?"
+    if [[ "$err" -ne 0 ]]; then
+        log "Failed to set commented out  kernel option $option; err: $err; aborting script"
         exit $err
     fi
 

@@ -841,6 +841,23 @@ installTmuxconfDotfile()
     log "Install .tmux.conf dotfile...done"
 }
 
+installAlsa()
+{
+    log "Install alsa..."
+    cmd "emerge media-sound/alsa-utils"
+    log "Install alsa...done"
+}
+
+configureAlsa()
+{
+    log "Configure alsa..."
+    # Add user to audio group for access priviliges
+    cmd "gpasswd -a adam audio"
+    # Start alsa service at boot
+    cmd "rc-update add alsasound boot"
+    log "Configure alsa...done"
+}
+
 installGentoolkit()
 {
     log "Install gentoolkit..."
