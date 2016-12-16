@@ -76,6 +76,7 @@ main()
     #---------------------------------------
     installAlsa
     configureAlsa
+    installCmus
 
     #---------------------------------------
     # Utilities

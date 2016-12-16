@@ -858,6 +858,13 @@ configureAlsa()
     log "Configure alsa...done"
 }
 
+installCmus()
+{
+    log "Install cmus..."
+    cmd "emerge media-sound/cmus"
+    log "Install cmus...done"
+}
+
 installGentoolkit()
 {
     log "Install gentoolkit..."
