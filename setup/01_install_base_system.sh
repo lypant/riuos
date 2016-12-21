@@ -97,6 +97,7 @@ main()
     generateDefaultKernelConfig
     backupDefaultKernelConfig
     setKernelConfigForAlsa
+    setKernelConfigForUvesafb
     # TODO Add here more kernel options configuration steps if needed
     compileKernel
     installKernelModules

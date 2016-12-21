@@ -79,15 +79,37 @@ main()
     installCmus
 
     #---------------------------------------
+    # Graphics
+    #---------------------------------------
+
+    #-------------------
+    # Uvesafb
+    #-------------------
+    rebuildKlibcWithUvesafbSupport
+    setV86dUseFlags
+    installV86d
+    setV86dKernelOptions    # Requires kernel, initramfs and modules reinstall
+    setUvesafbBootParams
+
+    #---------------------------------------
     # Utilities
     #---------------------------------------
     installGentoolkit
     installPciutils
 
     #---------------------------------------
+    # Kernel, modules, initramfs recreation
+    #---------------------------------------
+    rebuildInitramfs
+    recompileKernel
+    reinstallKernel
+    reinstallKernelModules
+
+    #---------------------------------------
     # Final steps
     #---------------------------------------
     changeHomeOwnership
+    # TODO Copy logs to user directory from root's home
 
     log "Install programs...done"
 }

@@ -310,6 +310,17 @@ backupFile()
     cmd "cp $srcDir/$file $dstDir/${file}_$now"
 }
 
+# @brief Creates backup of /mnt/gentoo/usr/src/linux/.config
+# @note Use only during first stage of installation, during livecd session
+backupMountedKernelConfig()
+{
+    local srcDir="/mnt/gentoo/usr/src/linux"
+    local file=".config"
+    local backupDir="$srcDir/riuos_backups"
+
+    backupFile "$srcDir" "$file" "$backupDir"
+}
+
 # @brief Adds new option to the kernel config file
 # @param option option to be set, e.g. CONFIG_SND_RAWMIDI
 # @param value value to be set; default is 'y' without quotes; e.g. y; e.g. m
@@ -327,7 +338,7 @@ addKernelOption()
     cmd "echo $option=$value >> $file"
 }
 
-# @brief Replaces the line with an option with the option with the new value, for all occurences in a file
+# @brief Replaces the line containing an option with the option with the new value, for all occurences in a file
 # @param option option to be found, e.g. CONFIG_SND_RAWMIDI_SEQ
 # @param value value to be set; default y; e.g. y, e.g. m
 # @param file file to be modified; default /mnt/gentoo/usr/src/linux/.config
@@ -353,6 +364,32 @@ setKernelOption()
     set -o errexit
 }
 
+# @brief Replaces the line containing an option with the option with the new value surrounded with quotes, for all occurences in a file
+# @param option option to be found, e.g. CONFIG_INITRAMFS_SOURCE
+# @param value value to be set; e.g. /usr/share/v86d/initramfs
+# @param file file to be modified; default /mnt/gentoo/usr/src/linux/.config
+# @example setKernelOption CONFIG_INITRAMFS_SOURCE /usr/share/v86d/initramfs /usr/src/linux/.config
+setQoutedKernelOption()
+{
+    local option="$1"
+    local value="$2"
+    local file="${3:-/mnt/gentoo/usr/src/linux/.config}"
+    local err=0
+
+    # Temporarily disable exiting script on error to show msg on failure...
+    set +o errexit
+
+    cmd "sed -i \"/\b$option\b/{s:.*:$option=\\\"$value\\\":;h};\\\${x;/./{x;q0};x;q1}\" $file"
+    err="$?"
+    if [[ "$err" -ne 0 ]]; then
+        log "Failed to set quoted kernel option $option; err: $err; aborting script"
+        exit $err
+    fi
+
+    # Re-enable exiting script on error
+    set -o errexit
+}
+
 # @brief Appends commented out option to a given file
 # @param option option to be added
 # @param file file to be modified; default /mnt/gentoo/usr/src/linux/.config
@@ -371,6 +408,31 @@ addUnsetKernelOption()
     err="$?"
     if [[ "$err" -ne 0 ]]; then
         log "Failed to set commented out  kernel option $option; err: $err; aborting script"
+        exit $err
+    fi
+
+    # Re-enable exiting script on error
+    set -o errexit
+}
+
+# @brief Appends new data at the end of line(s) containing given pattern
+# @param append data to append
+# @param containing pattern to match
+# @param file file in which pattern matching and appending will be done
+# @example appendToLineContaining video=uvesafb:800x600-32 APPEND /boot/extlinux/extlinux.conf
+appendToLineContaining()
+{
+    local append="$1"
+    local containing="$2"
+    local file="$3"
+
+    # Temporarily disable exiting script on error to show msg on failure...
+    set +o errexit
+
+    cmd "sed -i \"/\b$containing\b/{s| $append|;h};\\\${x;/./{x;q0};x;q1}\" $file"
+    err="$?"
+    if [[ "$err" -ne 0 ]]; then
+        log "Failed to append $append to a line containing $containing; err: $err; aborting script"
         exit $err
     fi
 

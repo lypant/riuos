@@ -435,12 +435,9 @@ generateDefaultKernelConfig()
 
 backupDefaultKernelConfig()
 {
-    local srcDir="/mnt/gentoo/usr/src/linux"
-    local file=".config"
-    local dstDir="$srcDir/riuos_backups"
-
     log "Backup default kernel config..."
-    backupFile "$srcDir" "$file" "$dstDir"
+    backupMountedKernelConfig
+    # Add marker in file after which newly introduced options will be added
     cmd "echo >> $srcDir/$file"
     cmd "echo '# Options added by riuos setup scripts' >> $srcDir/$file"
     log "Backup default kernel config...done"
@@ -448,14 +445,10 @@ backupDefaultKernelConfig()
 
 setKernelConfigForAlsa()
 {
-    local srcDir="/mnt/gentoo/usr/src/linux"
-    local file=".config"
-    local backupDir="$srcDir/riuos_backups"
-
     log "Set kernel config for alsa..."
 
     # Backup current config
-    backupFile "$srcDir" "$file" "$backupDir"
+    backupMountedKernelConfig
 
     # Change existing options
     setKernelOption CONFIG_SND_RAWMIDI_SEQ
@@ -468,6 +461,20 @@ setKernelConfigForAlsa()
     addKernelOption CONFIG_SND_OPL3_LIB
 
     log "Set kernel config for alsa...done"
+}
+
+setKernelConfigForUvesafb()
+{
+    log "Set kernel config for uvesafb..."
+
+    # Backup current config
+    backupMountedKernelConfig
+
+    # Change existing options
+    setKernelOption CONFIG_FIRMWARE_EDID
+    setKernelOption CONFIG_FB_UVESA
+
+    log "Set kernel config for uvesafb...done"
 }
 
 compileKernel()
@@ -863,6 +870,93 @@ installCmus()
     log "Install cmus..."
     cmd "emerge media-sound/cmus"
     log "Install cmus...done"
+}
+
+# Requires uvesafb kernel parameters to be set first.
+# This is done during base system installation
+rebuildKlibcWithUvesafbSupport()
+{
+    log "Rebuild klibc with uvesafb support..."
+    cmd "emerge --oneshot --changed-use dev-libs/klibc"
+    log "Rebuild klibc with uvesafb support...done"
+}
+
+setV86dUseFlags()
+{
+    local file="/etc/portage/package.use/v86d"
+    local entry="sys-apps/v86d x86emu"
+
+    log "Set v86d use flags..."
+    cmd "echo $entry >> $file"
+    log "Set v86d use flags...done"
+}
+
+installV86d()
+{
+    log "Install v86d..."
+    cmd "emerge sys-apps/v86d"
+    log "Install v86d...done"
+}
+
+setV86dKernelOptions()
+{
+    local option="CONFIG_INITRAMFS_SOURCE"
+    local value="/usr/share/v86d/initramfs"
+    local file="/usr/src/linux/.config"
+
+    log "Include v86d initramfs in kernel config..."
+    setQuotedKernelOption $option $value $file
+    addKernelOption CONFIG_INITRAMFS_ROOT_UID 0 $file
+    addKernelOption CONFIG_INITRAMFS_ROOT_GID 0 $file
+    log "Include v86d initramfs in kernel config...done"
+}
+
+# TODO Consider alternative approach - setting params at configureBootloader step
+setUvesafbBootParams()
+{
+    local params="video=uvesafb:800x600-32,mtrr:3,ywrap"
+    local pattern="APPEND"
+    local file="/boot/extlinux/extlinux.conf"
+
+    log "Set uvesafb boot params..."
+    cmd "mount /boot"
+    appendToLineContaining $params $pattern $file
+    cmd "umount /boot"
+    log "Set uvesafb boot params...done"
+}
+
+rebuildInitramfs()
+{
+    log "Rebuild initramfs..."
+    cmd "mount /boot"
+    cmd "genkernel --install initramfs"
+    cmd "umount /boot"
+    log "Rebuild initramfs...done"
+}
+
+recompileKernel()
+{
+    log "Recompile kernel..."
+    cmd "make -C /usr/src/linux"
+    log "Recompile kernel...done"
+}
+
+reinstallKernel()
+{
+    log "Reinstall kernel..."
+    cmd "mount /boot"
+    cmd "make -C /usr/src/linux install"
+    cmd "umount /boot"
+    log "Reinstall kernel...done"
+}
+
+reinstallKernelModules()
+{
+    log "Reinstall kernel modules..."
+    cmd "mount /boot"
+    cmd "make -C /usr/src/linux modules_install"
+    cmd "umount /boot"
+    log "Reinstall kernel modules...done"
 }
 
 installGentoolkit()
