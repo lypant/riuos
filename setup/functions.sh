@@ -369,7 +369,7 @@ setKernelOption()
 # @param value value to be set; e.g. /usr/share/v86d/initramfs
 # @param file file to be modified; default /mnt/gentoo/usr/src/linux/.config
 # @example setKernelOption CONFIG_INITRAMFS_SOURCE /usr/share/v86d/initramfs /usr/src/linux/.config
-setQoutedKernelOption()
+setQuotedKernelOption()
 {
     local option="$1"
     local value="$2"
@@ -429,7 +429,7 @@ appendToLineContaining()
     # Temporarily disable exiting script on error to show msg on failure...
     set +o errexit
 
-    cmd "sed -i \"/\b$containing\b/{s| $append|;h};\\\${x;/./{x;q0};x;q1}\" $file"
+    cmd "sed -i \"/\b$containing\b/{s|$| $append|;h};\\\${x;/./{x;q0};x;q1}\" $file"
     err="$?"
     if [[ "$err" -ne 0 ]]; then
         log "Failed to append $append to a line containing $containing; err: $err; aborting script"
