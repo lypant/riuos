@@ -435,6 +435,9 @@ generateDefaultKernelConfig()
 
 backupDefaultKernelConfig()
 {
+    local srcDir="/mnt/gentoo/usr/src/linux"
+    local file=".config"
+
     log "Backup default kernel config..."
     backupMountedKernelConfig
     # Add marker in file after which newly introduced options will be added
