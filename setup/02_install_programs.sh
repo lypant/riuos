@@ -55,6 +55,12 @@ main()
     copyOverRiuosFiles
 
     #---------------------------------------
+    # Custom home directories
+    #---------------------------------------
+    createForgeDir
+    addRiuosBinDirToPath
+
+    #---------------------------------------
     # Vim
     #---------------------------------------
     installVim
@@ -90,6 +96,12 @@ main()
     installV86d
     setV86dKernelOptions    # Requires kernel, initramfs and modules reinstall
     setUvesafbBootParams
+
+    #-------------------
+    # Yaft
+    #-------------------
+    installIdumpDependencies
+    installIdump
 
     #---------------------------------------
     # Utilities

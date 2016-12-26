@@ -782,6 +782,21 @@ copyOverRiuosFiles()
     log "Copy over riuos files...done"
 }
 
+# Directory for building non-packaged SW etc.
+createForgeDir()
+{
+    log "Create forge dir..."
+    cmd "mkdir -p /home/adam/forge"
+    log "Create forge dir...done"
+}
+
+addRiuosBinDirToPath()
+{
+    log "Add riuos bin dir to path..."
+    cmd "echo 'export PATH=/home/adam/riuos/bin:$PATH' >> /home/adam/.bashrc"
+    log "Add riuos bin dir to path...done"
+}
+
 installVim()
 {
     log "Install vim..."
@@ -926,6 +941,31 @@ setUvesafbBootParams()
     appendToLineContaining $params $pattern $file
     cmd "umount /boot"
     log "Set uvesafb boot params...done"
+}
+
+installIdumpDependencies()
+{
+    log "Install idump dependencies..."
+    cmd "emerge media-libs/libjpeg-turbo"
+    cmd "emerge media-libs/libpng"
+    log "Install idump dependencies...done"
+}
+
+installIdump()
+{
+    local srcDir="/home/adam/forge"
+    local repo="https://github.com/uobikiemukot/idump"
+    local bldDir="$srcDir/idump"
+    local binDir="/home/adam/riuos/bin"
+
+    log "Install idump..."
+    # Clone idump git repo
+    cmd "git -C $srcDir clone $repo"
+    # Build idump
+    cmd "make -C $bldDir"
+    # "Install" idump by copying it to user's home bin dir
+    cmd "cp $bldDir/idump $binDir"
+    log "Install idump...done"
 }
 
 installGentoolkit()
