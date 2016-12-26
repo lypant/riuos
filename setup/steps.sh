@@ -928,6 +928,20 @@ setUvesafbBootParams()
     log "Set uvesafb boot params...done"
 }
 
+installGentoolkit()
+{
+    log "Install gentoolkit..."
+    cmd "emerge app-portage/gentoolkit"
+    log "Install gentoolkit...done"
+}
+
+installPciutils()
+{
+    log "Install pciutils..."
+    cmd "emerge sys-apps/pciutils"
+    log "Install pciutils...done"
+}
+
 rebuildInitramfs()
 {
     log "Rebuild initramfs..."
@@ -960,20 +974,6 @@ reinstallKernelModules()
     cmd "make -C /usr/src/linux modules_install"
     cmd "umount /boot"
     log "Reinstall kernel modules...done"
-}
-
-installGentoolkit()
-{
-    log "Install gentoolkit..."
-    cmd "emerge app-portage/gentoolkit"
-    log "Install gentoolkit...done"
-}
-
-installPciutils()
-{
-    log "Install pciutils..."
-    cmd "emerge sys-apps/pciutils"
-    log "Install pciutils...done"
 }
 
 changeHomeOwnership()
