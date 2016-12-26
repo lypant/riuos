@@ -999,21 +999,21 @@ configureYaftFont()
     local font="nixedsys-normal.bdf"
     local bdf="/home/adam/riuos/fonts/$font"
     local bldDir="/home/adam/forge/yaft"
-    local newValue="./mkfont_bdf table/alias fonts/$font > glyph.h"
+    local newValue="	./mkfont_bdf table/alias fonts/$font > glyph.h"
     local file="$bldDir/makefile"
 
     log "Configure yaft font..."
     # Copy font description file
-    cmd "cp $bdf $bldDir"
+    cmd "cp $bdf $bldDir/fonts"
 
-    # Backup glyph.h
-    cmd "mv glyph.h glyph.h.bkp"
+    # Backup makefile
+    cmd "mv $file $file.bkp"
 
     # Edit makefile to use the copied font
     # Temporarily disable exiting script on error to show msg on failure...
     set +o errexit
 
-    cmd "sed -i \"/\b\\\.\\\/mkfont_bdf\b/{s|.*|$newValue|;h};\\\${x;/./{x;q0};x;q1}\" $file"
+    cmd "sed -i \"/\bmkfont_bdf table\b/{s|.*|$newValue|;h};\\\${x;/./{x;q0};x;q1}\" $file"
     err="$?"
     if [[ "$err" -ne 0 ]]; then
         log "Failed to change yaft font; err: $err; aborting script"
