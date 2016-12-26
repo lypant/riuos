@@ -104,7 +104,9 @@ main()
     #-------------------
     installIdumpDependencies
     installIdump
-    installYaft
+    cloneYaftRepo
+    configureYaftFont
+    buildAndInstallYaft
 
     #---------------------------------------
     # Utilities
