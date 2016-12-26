@@ -739,13 +739,6 @@ addRegularUserToSudoers()
     log "Add regular user to sudoers...done"
 }
 
-setSudoBashCompletion()
-{
-    log "Set sudo bash completion..."
-    cmd "echo \"complete -cf sudo\" >> /home/adam/.bashrc"
-    log "Set sudo bash completion...done"
-}
-
 installGit()
 {
     log "Install git..."
@@ -795,6 +788,20 @@ addRiuosBinDirToPath()
     log "Add riuos bin dir to path..."
     cmd "echo 'export PATH=/home/adam/riuos/bin:$PATH' >> /home/adam/.bashrc"
     log "Add riuos bin dir to path...done"
+}
+
+installBashrcDotfile()
+{
+    log "Install .bashrc dotfile..."
+    installDotfile .bashrc
+    log "Install .bashrc dotfile...done"
+}
+
+installBashProfileDotfile()
+{
+    log "Install .bash_profile dotfile..."
+    installDotfile .bash_profile
+    log "Install .bash_profile dotfile...done"
 }
 
 installVim()
@@ -943,6 +950,14 @@ setUvesafbBootParams()
     log "Set uvesafb boot params...done"
 }
 
+# Needed to be able to access framebuffer device /dev/fb0
+addUserToVideoGroup()
+{
+    log "Add user to video group..."
+    cmd "gpasswd -a adam video"
+    log "Add user to video group...done"
+}
+
 installIdumpDependencies()
 {
     log "Install idump dependencies..."
@@ -966,6 +981,22 @@ installIdump()
     # "Install" idump by copying it to user's home bin dir
     cmd "cp $bldDir/idump $binDir"
     log "Install idump...done"
+}
+
+installYaft()
+{
+    local srcDir="/home/adam/forge"
+    local repo="https://github.com/uobikiemukot/yaft"
+    local bldDir="$srcDir/yaft"
+
+    log "Install yaft..."
+    # Clone yaft git repo
+    cmd "git -C $srcDir clone $repo"
+    # Build yaft
+    cmd "make -C $bldDir"
+    # Install yaft
+    cmd "make -C $bldDir install"
+    log "Install yaft...done"
 }
 
 installGentoolkit()

@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# This is a stub of a script to launch yaft with background and shell preconfigured...
-# At the moment the file is added as a workaround to not being able to add empty
-# bin directory to a git repository
-echo "TODO Implement..."
+BGD_IMG="/home/adam/riuos/backgrounds/RobcoBlank800x600.png"
+
+# TODO Check if 'tput civis' is needed
+idump "$BGD_IMG"; tput civis; YAFT="wall" SHELL="/usr/bin/tmux" yaft
+

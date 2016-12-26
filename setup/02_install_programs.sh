@@ -43,7 +43,6 @@ main()
     setRegularUserPassword
     installSudo
     addRegularUserToSudoers
-    setSudoBashCompletion
 
     #---------------------------------------
     # Git and riuos files
@@ -59,6 +58,8 @@ main()
     #---------------------------------------
     createForgeDir
     addRiuosBinDirToPath
+    installBashrcDotfile
+    installBashProfileDotfile
 
     #---------------------------------------
     # Vim
@@ -96,12 +97,14 @@ main()
     installV86d
     setV86dKernelOptions    # Requires kernel, initramfs and modules reinstall
     setUvesafbBootParams
+    addUserToVideoGroup
 
     #-------------------
     # Yaft
     #-------------------
     installIdumpDependencies
     installIdump
+    installYaft
 
     #---------------------------------------
     # Utilities
