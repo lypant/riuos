@@ -1007,7 +1007,7 @@ configureYaftFont()
     cmd "cp $bdf $bldDir/fonts"
 
     # Backup makefile
-    cmd "mv $file $file.bkp"
+    cmd "cp $file $file.bkp"
 
     # Edit makefile to use the copied font
     # Temporarily disable exiting script on error to show msg on failure...
