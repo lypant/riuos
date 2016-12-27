@@ -1039,8 +1039,8 @@ configureYaftColors()
     # Backup file to be modified
     cmd "cp $file $fileBkp"
     # Replace system color definition lines
-    replaceLineContaining $newLine1 $oldLine1 $file
-    replaceLineContaining $newLine2 $oldLine2 $file
+    replaceLineContaining "$newLine1" "$oldLine1" "$file"
+    replaceLineContaining "$newLine2" "$oldLine2" "$file"
     log "Configure yaft colors...done"
 }
 
