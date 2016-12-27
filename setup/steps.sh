@@ -1077,8 +1077,8 @@ configureYaftColors()
     # Backup file to be modified
     cmd "cp $file $fileBkp"
     # Replace system color definition lines
-    replaceLineContaining "$newLine1" "$oldLine1" "$file"
-    replaceLineContaining "$newLine2" "$oldLine2" "$file"
+    replaceLineContainingWord "$newLine1" "$oldLine1" "$file"
+    replaceLineContainingWord "$newLine2" "$oldLine2" "$file"
     log "Configure yaft colors...done"
 }
 
@@ -1114,9 +1114,9 @@ installGentooSplashThemes()
 enableSplashThemeInclusionToInitramfs()
 {
     local file="/etc/genkernel.conf"
-    local oldThemeLine="#SPLASH_THEME=\"gentoo\""
+    local oldThemeLine="#SPLASH_THEME="
     # TODO Change to custom theme when ready
-    local newThemeLine="SPLASH_THEME=\"natural_gentoo\""
+    local newThemeLine="SPLASH_THEME=\\\"natural_gentoo\\\""
 
     log "Enable splash theme inclusion to initramfs..."
     # Create backup of genkernel config
@@ -1138,7 +1138,7 @@ setFbsplashBootParams()
 
     log "Set fbsplash boot params..."
     cmd "mount /boot"
-    appendToLineContaining $params $pattern $file
+    appendToLineContaining "$params" "$pattern" "$file"
     cmd "umount /boot"
     log "Set fbsplash boot params...done"
 }

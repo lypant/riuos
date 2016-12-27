@@ -225,7 +225,7 @@ uncommentVar()
     local var="$1"
     local file="$2"
 
-    cmd "sed -i \"s|^#\(${var}.*\)$|\1|\" ${file}"
+    cmd "sed -i \"/\b${var}\b/ s|^#\(${var}.*\)$|\1|\" ${file}"
 }
 
 # @brief Finds number of given locale name and stores the number into given file
@@ -468,8 +468,11 @@ appendToLineContaining()
 # @param replacement new line contents
 # @param containing contents of line to be replaced
 # @param file file in which replacement should be made
-# @example replaceLineContaining enp0s12 enp0s3 /some/file
-replaceLineContaining()
+# @example replaceLineContainingWord enp0s12 enp0s3 /some/file
+# @note Contained word has to be plain old word with word boudaries
+# TODO Think about more elegant way than creating separate function depending on
+#      rules of phrase matching
+replaceLineContainingWord()
 {
     local replacement="$1"
     local containing="$2"
@@ -479,6 +482,34 @@ replaceLineContaining()
     set +o errexit
 
     cmd "sed -i \"/\b$containing\b/{s|.*|$replacement|;h};\\\${x;/./{x;q0};x;q1}\" $file"
+    err="$?"
+    if [[ "$err" -ne 0 ]]; then
+        log "Failed to replace a line containing $containing with $replacement; err: $err; aborting script"
+        exit $err
+    fi
+
+    # Re-enable exiting script on error
+    set -o errexit
+}
+
+# @brief Replaces whole line containing given pattern with given replacement
+# @param replacement new line contents
+# @param containing contents of line to be replaced
+# @param file file in which replacement should be made
+# @example replaceLineContaining enp0s12 enp0s3 /some/file
+# @note Contained word is not checked for word boundaries
+# TODO Think about more elegant way than creating separate function depending on
+#      rules of phrase matching
+replaceLineContaining()
+{
+    local replacement="$1"
+    local containing="$2"
+    local file="$3"
+
+    # Temporarily disable exiting script on error to show msg on failure...
+    set +o errexit
+
+    cmd "sed -i \"/$containing/{s|.*|$replacement|;h};\\\${x;/./{x;q0};x;q1}\" $file"
     err="$?"
     if [[ "$err" -ne 0 ]]; then
         log "Failed to replace a line containing $containing with $replacement; err: $err; aborting script"
