@@ -440,3 +440,28 @@ appendToLineContaining()
     set -o errexit
 }
 
+# @brief Replaces whole line containing given pattern with given replacement
+# @param replacement new line contents
+# @param containing contents of line to be replaced
+# @param file file in which replacement should be made
+# @example replaceLineContaining enp0s12 enp0s3 /some/file
+replaceLineContaining()
+{
+    local replacement="$1"
+    local containing="$2"
+    local file="$3"
+
+    # Temporarily disable exiting script on error to show msg on failure...
+    set +o errexit
+
+    cmd "sed -i \"/\b$containing\b/{s|.*|$replacement|;h};\\\${x;/./{x;q0};x;q1}\" $file"
+    err="$?"
+    if [[ "$err" -ne 0 ]]; then
+        log "Failed to replace a line containing $containing with $replacement; err: $err; aborting script"
+        exit $err
+    fi
+
+    # Re-enable exiting script on error
+    set -o errexit
+}
+

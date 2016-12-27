@@ -106,6 +106,7 @@ main()
     installIdump
     cloneYaftRepo
     configureYaftFont
+    configureYaftColors
     buildAndInstallYaft
 
     #---------------------------------------

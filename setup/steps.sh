@@ -1026,6 +1026,24 @@ configureYaftFont()
     log "Configure yaft font...done"
 }
 
+configureYaftColors()
+{
+    local oldLine1="0x000000, 0xAA0000, 0x00AA00, 0xAA5500, 0x0000AA, 0xAA00AA, 0x00AAAA, 0xAAAAAA"
+    local oldLine2="0x555555, 0xFF5555, 0x55FF55, 0xFFFF55, 0x5555FF, 0xFF55FF, 0x55FFFF, 0xDFDFDF"
+    local newLine1="    0x305042, 0x3DF5A0, 0x007D28, 0x00913C, 0x00A550, 0x01B964, 0x15CD78, 0x29E18C,"
+    local newLine2="    0x406052, 0x47FFAA, 0x008732, 0x009B46, 0x00AF5A, 0x0BC36E, 0x1FD782, 0x33EB96,"
+    local file="/home/adam/forge/yaft/color.h"
+    local fileBkp="$file.bkp"
+
+    log "Configure yaft colors..."
+    # Backup file to be modified
+    cmd "cp $file $fileBkp"
+    # Replace system color definition lines
+    replaceLineContaining $newLine1 $oldLine1 $file
+    replaceLineContaining $newLine2 $oldLine2 $file
+    log "Configure yaft colors...done"
+}
+
 buildAndInstallYaft()
 {
     local bldDir="/home/adam/forge/yaft"
