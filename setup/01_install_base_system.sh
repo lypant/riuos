@@ -93,12 +93,25 @@ main()
     #---------------------------------------
     # Kernel
     #---------------------------------------
+
+    #-------------------
+    # Default config
+    #-------------------
     installKernelSources
     generateDefaultKernelConfig
     backupDefaultKernelConfig
+
+    #-------------------
+    # Config adjustments
+    #-------------------
     setKernelConfigForAlsa
     setKernelConfigForUvesafb
+    setKernelConfigForFbsplash
     # TODO Add here more kernel options configuration steps if needed
+
+    #-------------------
+    # Compilation, etc.
+    #-------------------
     compileKernel
     installKernelModules
     installKernel

@@ -364,6 +364,30 @@ setKernelOption()
     set -o errexit
 }
 
+# @brief Changes given option to commented out line stating that option is unset
+# @param option option to be unset
+# @param file file to be modified; default /mnt/gentoo/usr/src/linux/.config
+# @example unsetKernelOption CONFIG_FB_TILEBLITTING
+unsetKernelOption()
+{
+    local option="$1"
+    local file="${2:-/mnt/gentoo/usr/src/linux/.config}"
+    local err=0
+
+    # Temporarily disable exiting script on error to show msg on failure...
+    set +o errexit
+
+    cmd "sed -i \"/\b$option\b/{s/.*/# $option is not set/;h};\\\${x;/./{x;q0};x;q1}\" $file"
+    err="$?"
+    if [[ "$err" -ne 0 ]]; then
+        log "Failed to unset kernel option $option; err: $err; aborting script"
+        exit $err
+    fi
+
+    # Re-enable exiting script on error
+    set -o errexit
+}
+
 # @brief Replaces the line containing an option with the option with the new value surrounded with quotes, for all occurences in a file
 # @param option option to be found, e.g. CONFIG_INITRAMFS_SOURCE
 # @param value value to be set; e.g. /usr/share/v86d/initramfs

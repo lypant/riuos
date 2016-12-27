@@ -480,6 +480,22 @@ setKernelConfigForUvesafb()
     log "Set kernel config for uvesafb...done"
 }
 
+setKernelConfigForFbsplash()
+{
+    log "Set kernel config for fbsplash..."
+
+    # Backup current config
+    backupMountedKernelConfig
+
+    # Change existing options
+    unsetKernelOption CONFIG_FB_TILEBLITTING
+
+    # Add new options
+    addKernelOption CONFIG_FB_CON_DECOR
+
+    log "Set kernel config for fbsplash...done"
+}
+
 compileKernel()
 {
     log "Compile kernel..."
