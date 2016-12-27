@@ -339,7 +339,7 @@ selectProfile()
     log "Select profile...done"
 }
 
-setUseFlags()
+setGlobalUseFlags()
 {
     local file="/mnt/gentoo/etc/portage/make.conf"
     local useFlags="alsa"
@@ -347,6 +347,38 @@ setUseFlags()
     log "Set use flags..."
     replaceVarValueQuoted USE $file "$useFlags"
     log "Set use flags...done"
+}
+
+setV86dUseFlags()
+{
+    local file="/mnt/gentoo/etc/portage/package.use/v86d"
+    local entry="sys-apps/v86d x86emu"
+
+    log "Set v86d use flags..."
+    cmd "echo $entry >> $file"
+    log "Set v86d use flags...done"
+}
+
+setFbsplashUseFlags()
+{
+    local file="/mnt/gentoo/etc/portage/package.use/fbsplash"
+    local entry1="media-gfx/splashutils fbcondecor"
+    local entry2="media-libs/freetype static-libs"
+    local entry3="media-libs/libpng static-libs"
+    local entry4="media-libs/libjpeg-turbo static-libs"
+    local entry5="virtual/jpeg static-libs"
+    local entry6="sys-libs/zlib static-libs"
+    local entry7="app-arch/bzip2 static-libs"
+
+    log "Set fbsplash use flags..."
+    cmd "echo $entry1 >> $file"
+    cmd "echo $entry2 >> $file"
+    cmd "echo $entry3 >> $file"
+    cmd "echo $entry4 >> $file"
+    cmd "echo $entry5 >> $file"
+    cmd "echo $entry6 >> $file"
+    cmd "echo $entry7 >> $file"
+    log "Set fbsplash use flags...done"
 }
 
 updateWorldSet()
@@ -922,16 +954,6 @@ rebuildKlibcWithUvesafbSupport()
     log "Rebuild klibc with uvesafb support...done"
 }
 
-setV86dUseFlags()
-{
-    local file="/etc/portage/package.use/v86d"
-    local entry="sys-apps/v86d x86emu"
-
-    log "Set v86d use flags..."
-    cmd "echo $entry >> $file"
-    log "Set v86d use flags...done"
-}
-
 installV86d()
 {
     log "Install v86d..."
@@ -1070,6 +1092,55 @@ buildAndInstallYaft()
     # Install yaft
     cmd "make -C $bldDir install"
     log "Build and install yaft...done"
+}
+
+# Fbsplash is available under package splashutils
+installFbsplash()
+{
+    log "Install fbsplash..."
+    cmd "emerge media-gfx/splashutils"
+    cmd "rc-update add fbcondecor boot"
+    log "Install fbsplash...done"
+}
+
+installGentooSplashThemes()
+{
+    log "Install gentoo splash themes..."
+    cmd "emerge media-gfx/splash-themes-gentoo"
+    log "Install gentoo splash themes...done"
+}
+
+# TODO Requires initramfs recreation - genkernel
+enableSplashThemeInclusionToInitramfs()
+{
+    local file="/etc/genkernel.conf"
+    local oldThemeLine="#SPLASH_THEME=\"gentoo\""
+    # TODO Change to custom theme when ready
+    local newThemeLine="SPLASH_THEME=\"natural_gentoo\""
+
+    log "Enable splash theme inclusion to initramfs..."
+    # Create backup of genkernel config
+    cmd "cp $file $file.bkp"
+    # Enable splash theme
+    uncommentVar "SPLASH" $file
+    # Change theme name
+    replaceLineContaining "$newThemeLine" "$oldThemeLine" "$file"
+    log "Enable splash theme inclusion to initramfs...done"
+}
+
+# TODO Consider alternative approach - setting params at configureBootloader step
+setFbsplashBootParams()
+{
+    local theme="natural_gentoo"    # TODO Replace with custom theme when ready
+    local params="splash=silent,theme:$theme quiet logo.nologo console=tty1"
+    local pattern="APPEND"
+    local file="/boot/extlinux/extlinux.conf"
+
+    log "Set fbsplash boot params..."
+    cmd "mount /boot"
+    appendToLineContaining $params $pattern $file
+    cmd "umount /boot"
+    log "Set fbsplash boot params...done"
 }
 
 installGentoolkit()

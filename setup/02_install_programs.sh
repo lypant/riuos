@@ -93,7 +93,6 @@ main()
     # Uvesafb
     #-------------------
     rebuildKlibcWithUvesafbSupport
-    setV86dUseFlags
     installV86d
     setV86dKernelOptions    # Requires kernel, initramfs and modules reinstall
     setUvesafbBootParams
@@ -108,6 +107,14 @@ main()
     configureYaftFont
     configureYaftColors
     buildAndInstallYaft
+
+    #-------------------
+    # Fbsplash
+    #-------------------
+    installFbsplash
+    installGentooSplashThemes               # TODO Remove while custom theme is set up
+    enableSplashThemeInclusionToInitramfs   # Requires initramfs recreation
+    setFbsplashBootParams
 
     #---------------------------------------
     # Utilities

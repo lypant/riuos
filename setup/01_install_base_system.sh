@@ -79,7 +79,13 @@ main()
     mountLiveFilesystems
     installPortageSnapshot
     selectProfile
-    setUseFlags
+
+    #-------------------
+    # Use flags
+    #-------------------
+    setGlobalUseFlags
+    setV86dUseFlags
+    setFbsplashUseFlags
     updateWorldSet
 
     #---------------------------------------
