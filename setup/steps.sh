@@ -1150,6 +1150,13 @@ setLoginMessage()
     log "Set login message...done"
 }
 
+disableLastLoginMessage()
+{
+    log "Disable last login message..."
+    cmd "touch /home/adam/.hushlogin"
+    log "Disable last login message...done"
+}
+
 installGentoolkit()
 {
     log "Install gentoolkit..."

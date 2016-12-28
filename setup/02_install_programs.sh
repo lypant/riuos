@@ -116,7 +116,7 @@ main()
     enableSplashThemeInclusionToInitramfs   # Requires initramfs recreation
     setFbsplashBootParams
     setLoginMessage
-
+    disableLastLoginMessage
 
     #---------------------------------------
     # Utilities
