@@ -1103,20 +1103,19 @@ installFbsplash()
     log "Install fbsplash...done"
 }
 
-installGentooSplashThemes()
+installCustomFbsplashTheme()
 {
-    log "Install gentoo splash themes..."
-    cmd "emerge media-gfx/splash-themes-gentoo"
-    log "Install gentoo splash themes...done"
+    log "Install custom fbsplash theme..."
+    cmd "cp -R /home/adam/riuos/backgrounds/robco1 /etc/splash/"
+    log "Install custom fbsplash theme...done"
 }
 
-# TODO Requires initramfs recreation - genkernel
+# Requires initramfs recreation - genkernel
 enableSplashThemeInclusionToInitramfs()
 {
     local file="/etc/genkernel.conf"
     local oldThemeLine="#SPLASH_THEME="
-    # TODO Change to custom theme when ready
-    local newThemeLine="SPLASH_THEME=\\\"natural_gentoo\\\""
+    local newThemeLine="SPLASH_THEME=\\\"robco1\\\""
 
     log "Enable splash theme inclusion to initramfs..."
     # Create backup of genkernel config
@@ -1131,7 +1130,7 @@ enableSplashThemeInclusionToInitramfs()
 # TODO Consider alternative approach - setting params at configureBootloader step
 setFbsplashBootParams()
 {
-    local theme="natural_gentoo"    # TODO Replace with custom theme when ready
+    local theme="robco1"
     local params="splash=silent,theme:$theme quiet logo.nologo console=tty1"
     local pattern="APPEND"
     local file="/boot/extlinux/extlinux.conf"

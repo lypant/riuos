@@ -112,7 +112,7 @@ main()
     # Fbsplash
     #-------------------
     installFbsplash
-    installGentooSplashThemes               # TODO Remove while custom theme is set up
+    installCustomFbsplashTheme
     enableSplashThemeInclusionToInitramfs   # Requires initramfs recreation
     setFbsplashBootParams
 
