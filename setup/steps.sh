@@ -1142,6 +1142,13 @@ setFbsplashBootParams()
     log "Set fbsplash boot params...done"
 }
 
+setLoginMessage()
+{
+    log "Set login message..."
+    cmd "echo -e '\n\n\n\n' > /etc/issue"
+    log "Set login message...done"
+}
+
 installGentoolkit()
 {
     log "Install gentoolkit..."

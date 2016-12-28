@@ -115,6 +115,8 @@ main()
     installCustomFbsplashTheme
     enableSplashThemeInclusionToInitramfs   # Requires initramfs recreation
     setFbsplashBootParams
+    setLoginMessage
+
 
     #---------------------------------------
     # Utilities
