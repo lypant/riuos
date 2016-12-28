@@ -1106,7 +1106,7 @@ installFbsplash()
 installCustomFbsplashTheme()
 {
     log "Install custom fbsplash theme..."
-    cmd "cp -R /home/adam/riuos/backgrounds/robco1 /etc/splash/"
+    cmd "cp -R /root/riuos/backgrounds/robco1 /etc/splash/"
     log "Install custom fbsplash theme...done"
 }
 
