@@ -528,6 +528,32 @@ setKernelConfigForFbsplash()
     log "Set kernel config for fbsplash...done"
 }
 
+setKernelConfigForCustomFont()
+{
+    log "Set kernel config for custom font..."
+
+    # Backup current config
+    backupMountedKernelConfig
+
+    # Change existing options
+    setKernelOption CONFIG_FONTS
+    unsetKernelOption CONFIG_FONT_8x8
+
+    # Add new options
+    addKernelOption CONFIG_FONT_AUTOSELECT
+    addUnsetKernelOption CONFIG_FONT_6x11
+    addUnsetKernelOption CONFIG_FONT_7x14
+    addUnsetKernelOption CONFIG_FONT_PEARL_8x8
+    addUnsetKernelOption CONFIG_FONT_ACORN_8x8
+    addUnsetKernelOption CONFIG_FONT_MINI_4x6
+    addUnsetKernelOption CONFIG_FONT_6x10
+    addUnsetKernelOption CONFIG_FONT_SUN8x16
+    addUnsetKernelOption CONFIG_FONT_SUN12x22
+    addUnsetKernelOption CONFIG_FONT_10x18
+
+    log "Set kernel config for custom font...done"
+}
+
 compileKernel()
 {
     log "Compile kernel..."
@@ -1155,6 +1181,23 @@ disableLastLoginMessage()
     log "Disable last login message..."
     cmd "touch /home/adam/.hushlogin"
     log "Disable last login message...done"
+}
+
+# Requires kernel rebuild
+setCustomKernelFont()
+{
+    local orgPath="/usr/src/linux/lib/fonts"
+    local srcFile="$orgPath/font_8x16.c"
+    local objFile="$orgPath/font_8x16.o"
+
+    log "Set custom kernel font..."
+    # Backup original font source file
+    cmd "cp $srcFile ${srcFile}.bkp"
+    # Remove original font object file
+    cmd "rm -f $objFile"
+    # Copy custom font source file
+    cmd "cp /root/riuos/fonts/font_8x16.c $srcFile"
+    log "Set custom kernel font...done"
 }
 
 installGentoolkit()

@@ -113,6 +113,7 @@ main()
     setKernelConfigForAlsa
     setKernelConfigForUvesafb
     setKernelConfigForFbsplash
+    setKernelConfigForCustomFont
     # TODO Add here more kernel options configuration steps if needed
 
     #-------------------

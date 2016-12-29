@@ -115,8 +115,13 @@ main()
     installCustomFbsplashTheme
     enableSplashThemeInclusionToInitramfs   # Requires initramfs recreation
     setFbsplashBootParams
+
+    #---------------------------------------
+    # Boot
+    #---------------------------------------
     setLoginMessage
     disableLastLoginMessage
+    setCustomKernelFont                     # Requires kernel rebuild
 
     #---------------------------------------
     # Utilities
