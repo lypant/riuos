@@ -159,7 +159,7 @@ mountBootPartition()
     local mntPnt="/mnt/gentoo/boot"
 
     log "Mount boot partition..."
-    cmd "mkdir $mntPnt"
+    cmd "mkdir -p $mntPnt"
     cmd "mount /dev/$SYSTEM_HDD$BOOT_PART_NB $mntPnt"
     log "Mount boot partition...done"
 }
@@ -670,6 +670,10 @@ installBootloader()
     local files="menu.c32 memdisk libcom32.c32 libutil.c32"
 
     log "Install bootloader..."
+
+    # Workaround to problem installing Crypt-PasswdMD5 (or similar name)
+    # Note: Module-Build upper-case is required
+    gentooChroot "emerge dev-perl/Module-Build"
 
     # Use syslinux/extlinux as a bootloader
     gentooChroot "emerge sys-boot/syslinux"
